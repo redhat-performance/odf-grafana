@@ -18,3 +18,7 @@
     msg: Not logged in! You need to be logged in to run the playbook
   when: oc_status.rc > 0
 
+- name: Fail of the grafana_namespace variable is not set
+  fail:
+    msg: You must set grafana_namespace in either all.yml or use -e grafana_namespace=<wah> at execution time
+  when: grafana_namespace is not defined
