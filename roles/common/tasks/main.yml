@@ -1,0 +1,20 @@
+---
+
+# can't use ansible.builtin.package_facts due to oc being potentially installed via tarball
+- name: Check required packages are installed
+  command: "which {{ item }} "
+  register: result
+  changed_when: result.rc > 0
+  failed_when: result.rc > 0
+  with_items: "{{ dependencies }}"
+
+- name: Check logged in state
+  command: oc status
+  ignore_errors: yes
+  register: oc_status
+
+- name: fail if not logged in
+  fail:
+    msg: Not logged in! You need to be logged in to run the playbook
+  when: oc_status.rc > 0
+

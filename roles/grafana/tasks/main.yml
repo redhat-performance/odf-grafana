@@ -1,0 +1,22 @@
+---
+- name: Deploying Grafana
+  command:
+    cmd: oc apply -f - 
+    stdin: "{{ lookup('template', 'grafana.j2') }}"
+
+- name: Wait up to 5m for the external route to appear
+  command:
+    cmd: oc -n {{ grafana_namespace }} get route/grafana-route -o json
+  register: grafana_route
+  retries: 60
+  delay: 5
+  until: grafana_route.rc == 0
+
+- name: Extract the grafana route URL
+  set_fact:
+    grafana_route: "https://{{ grafana_route.stdout | from_json | json_query('spec.host') }}"
+  when: grafana_route.rc == 0
+
+  
+
+

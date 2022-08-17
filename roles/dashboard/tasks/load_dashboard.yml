@@ -1,0 +1,17 @@
+---
+- name: Set dashboard name
+  set_fact:
+    dashboard_name: "{{ item | basename | splitext | first }}"
+
+# the dashboard_content is wrapped by '' to prevent the content
+# being parsed has json which would result in the jinja2 template
+# dealing with a dict.
+- name: Load dashboard definition
+  set_fact: 
+    dashboard_content: "'{{ lookup('file', item) }}'"
+
+- name: Define dashboard to Grafana
+  command:
+    cmd: oc -n {{ grafana_namespace }} apply -f - 
+    stdin: "{{ lookup('template', 'dashboard.j2') }}"
+

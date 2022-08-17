@@ -1,0 +1,8 @@
+---
+- name: test dashboards
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - common 
+    - dashboard
+

@@ -1,0 +1,12 @@
+---
+- name: Load dashboard files
+  include_tasks: load_dashboard.yml
+  with_fileglob: "*.json" 
+  when: dashboard_path is not defined
+
+- name: Load user supplied dashboard
+  include_tasks: load_dashboard.yml
+  with_items:
+    - "{{ dashboard_path }}"
+  when: dashboard_path is defined 
+

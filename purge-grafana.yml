@@ -1,0 +1,38 @@
+---
+- name: Purge standaline Grafana namespace
+  hosts: localhost
+  gather_facts: false
+  vars:
+    grafana_namespace: ''
+  tasks:
+    - name: Check namespace is set 
+      fail:
+        msg: "You must set the grafana_namespace variable - Hint: -e grafana_namespace=mygrafana"
+      when: grafana_namespace | length == 0
+
+    - name: Gather available namespaces
+      command:
+        cmd: oc get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+      register: namespace_list
+
+    - name: Check namespace exists
+      fail:
+        msg: "{{ grafana_namespace }} does not exist. Aborting."
+      when: grafana_namespace not in namespace_list.stdout_lines
+
+    - name: Confirm before deletion
+      pause:
+        prompt: Are you sure you want to delete the namespace '{{ grafana_namespace }}' (yes/no) ?
+      register: confirm
+
+    - name: Aborting the namespace delete
+      debug:
+        msg: Aborted the namespace delete
+      when: confirm.user_input.upper() != 'YES'
+    
+    - name: Deleting the namespace
+      command:
+        cmd: oc delete ns {{ grafana_namespace }}
+      when: confirm.user_input.upper() == 'YES'
+
+

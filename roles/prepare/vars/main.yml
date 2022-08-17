@@ -1,0 +1,9 @@
+# default settings
+dependencies:
+  - pwgen
+  - oc 
+  - sed 
+  - jq
+
+password_length: 16
+

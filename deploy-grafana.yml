@@ -1,0 +1,18 @@
+---
+- name: Deploy Grafana
+  hosts: localhost
+  gather_facts: False
+  roles:
+    - common
+    - prepare
+    - operator
+    - grafana
+    - datasource
+    - dashboard
+  tasks:
+    - name: Show deployment summary
+      pause:
+        seconds: 0
+        prompt: |
+          {{ lookup('ansible.builtin.template', 'roles/grafana/templates/summary.j2') }}
+ 

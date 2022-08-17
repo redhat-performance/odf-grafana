@@ -1,0 +1,22 @@
+# grafana_user: grafana
+
+# password must be at least 16 chars in length
+# grafana_password: fred
+
+# grafana_namespace: mygrafana
+
+# prometheus datasource name - defaults to prometheus
+# datasource_name: prometheus
+
+# prometheus_route is the URL to the thanos querier endpoint of OCP.
+# when this is undefined, the playbook will use the local prometheus route when 
+# defining the prometheus datasource. If you are adding a second prometheus datasource
+# for another OCP instance, you're going to need to set these variables from the
+# other OCP's configuration  
+#
+# prometheus_route: < thanos-querier route >
+# token: <api token from oc -n openshift-monitoring sa get-token prometheus-k8s>
+
+# normally loading dashboard is done by iterating over the roles/dashboard/files directory
+# but you can allso explicitly load a dashboard by full path using the following
+# dashboard_path: <full path to json file>

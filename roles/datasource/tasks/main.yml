@@ -1,0 +1,26 @@
+---
+
+# use a service account token since these don't expire
+# NB. get-token is deprecated, but still used in OCP docs: https://access.redhat.com/solutions/2972601
+- name: Retrieve bearer token for prometheus-k8s service-account
+  command: "oc -n openshift-monitoring sa get-token {{ prometheus_service_account }}"
+  register: token_output
+  when: token is not defined
+
+- name: Unable to extract token from the service-account
+  fail:
+    msg: The 'sa get-token' command failed. Unable to create datasource.
+  when:
+    - token_output 
+    - token_output.rc > 0
+
+- name: Extract service account token
+  set_fact:
+    token: "{{ token_output.stdout }}"
+  when: token_output.rc == 0
+
+- name: Add datasource to Grafana
+  command:
+    cmd: oc apply -f - 
+    stdin: "{{ lookup('template', 'datasource.j2') }}"
+

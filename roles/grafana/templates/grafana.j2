@@ -1,0 +1,42 @@
+---
+apiVersion: integreatly.org/v1alpha1
+kind: Grafana
+metadata:
+  name: grafana
+  namespace: {{ grafana_namespace }}
+spec:
+  baseImage: docker.io/grafana/grafana:{{ grafana_image_tag }}
+  client:
+    preferService: true
+  ingress:
+    enabled: True
+    pathType: Prefix
+    path: "/"
+  config:
+    log:
+      mode: "console"
+      level: "error"
+    log.frontend:
+      enabled: true
+    auth:
+      disable_login_form: False
+      disable_signout_menu: True
+    auth.anonymous:
+      enabled: False
+    security:
+      admin_user: {{ grafana_user }}
+      admin_password: {{ grafana_password }}
+  service:
+    name: "grafana-service"
+    labels:
+      app: "grafana"
+      type: "grafana-service"
+  dashboardLabelSelector:
+    - matchExpressions:
+        - { key: app, operator: In, values: [grafana] }
+  resources:
+    # Optionally specify container resources
+    requests:
+      cpu: {{ grafana_cpu_requests }}
+      memory: {{ grafana_mem_requests }}
+

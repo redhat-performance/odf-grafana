@@ -1,0 +1,18 @@
+---
+
+- name: "Create '{{ grafana_namespace }}' namespace"
+  command:  
+    cmd: oc apply -f -
+    stdin: "{{ lookup('template', 'namespace.j2') }}"
+
+- name: Define the operatorGroup for OLM
+  command:
+    cmd: oc apply -f - 
+    stdin: "{{ lookup('template', 'operatorgroup.j2') }}"
+
+- name: Add subscription for OLM management of the grafana operator
+  command:
+    cmd: oc apply -f - 
+    stdin: "{{ lookup('template', 'subscription.j2') }}"
+
+

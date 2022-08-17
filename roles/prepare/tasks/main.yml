@@ -1,0 +1,36 @@
+---
+- name: find the URL for the thanos querier 
+  command: oc -n openshift-monitoring get route --field-selector metadata.name=thanos-querier -o json
+  register: prometheus_output
+  when: prometheus_route is not defined
+
+- name: store prometheus route
+  set_fact:
+    prometheus_route: "https://{{ prometheus_output.stdout | from_json | json_query('items[0].spec.host') }}"
+  when: prometheus_route is not defined
+
+- name: Generate a random password for Grafana
+  command: pwgen {{ password_length }} 1
+  register: pwgen_out
+  when: grafana_password is not defined
+
+- name: Set the Grafana password
+  set_fact:
+    grafana_password: "{{ pwgen_out.stdout }}"
+  when: grafana_password is not defined
+
+- name: Fail if the length of grafana_password is too short
+  fail:
+    msg: "Your grafana_password ({{ grafana_password }}) is too short. It must be at least {{ password_length }} chars in size"
+  when: grafana_password | length < 16
+
+- name: Fetch a list of namespaces
+  command: oc get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+  register: namespaces
+
+- name: Fail if the namespace '{{ grafana_namespace }}' already exists
+  fail:
+    msg: "Your chosen namespace {{ grafana_namespace }} is already defined"
+  when: grafana_namespace in namespaces.stdout_lines
+
+  

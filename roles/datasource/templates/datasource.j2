@@ -1,0 +1,26 @@
+---
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: prometheus
+  namespace: {{ grafana_namespace }}
+spec:
+  name: {{ datasource_name }}.yml
+  datasources:
+    - name: {{ datasource_name }}
+      type: prometheus
+      access: server
+      url: {{ prometheus_route }}
+      isDefault: true
+      version: 1
+      editable: true
+      jsonData:
+        tlsSkipVerify: true
+        timeInterval: "10s"
+        httpHeaderName1: 'HeaderName'
+        httpHeaderName2: 'Authorization'
+      secureJsonData:
+        httpHeaderValue1: 'HeaderValue'
+        httpHeaderValue2: 'Bearer {{ token }}'
+
+
