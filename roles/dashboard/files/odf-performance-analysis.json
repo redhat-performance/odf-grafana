@@ -730,8 +730,8 @@
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(rate(ceph_pool_rd[1m]) + rate(ceph_pool_wr[1m]))",
-              "legendFormat": "Total R/W IOPS - All pools",
+              "expr": "(rate(ceph_pool_rd[65s]) + rate(ceph_pool_wr[65s])) * on(pool_id) group_left(name) (ceph_pool_metadata)",
+              "legendFormat": "{{name}}",
               "range": true,
               "refId": "A"
             }
