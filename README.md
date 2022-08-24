@@ -63,7 +63,7 @@ NB. When you remove your grafana configuration, remember to use `oc project defa
 
 ### Adding a dashboard
 
-If you need to add dashboards to your instance after a deployment, you can use the add-dashboard playbook and specify the path to the dashboard file either from the all.yml file or as an extra-vars on the playbook command line.
+If you need to add dashboards to your instance after a deployment, you can use the `add-dashboard.yml` playbook and specify the path to the dashboard file either from the all.yml file or as an extra-vars on the playbook command line.
 
 ```
 # ansible-playbook add-dashboard.yml -e dashboard_path=<insert your path here>
@@ -71,13 +71,26 @@ If you need to add dashboards to your instance after a deployment, you can use t
 NB. For the dashboard to work, it must define it's datasources as $datasource. This is a simple way to make your dashboards portable.
 
 
+### Adding a datasource
+If you need to attach your grafana instance to a secondary cluster's prometheus instance, you can use the `add-datasource.yml` playbook. To
+set this up correctly you will need to set the following variables in `group_vars/all.yml'
+
+* `prometheus_route`: the external route to prometheus instance
+* `datasource_name`: the name to use inside your grafana instance for this datasource
+* `token`: the token from a suitable serviceaccount in the other cluster that permits access to prometheus data (prometheus-k8s)
+
+```
+# ansible-playbook add-datasource.yml
+```
+
+
 ## Configurations Tested
 
 The playbooks have been tested against the following config
 
-| Host OS | ansible | ansible-core | pwgen | oc | Cloud | Grafana operator| Grafana |
-|---------|---------|--------------|-------|----|-------|---------|---|
-| Fedora 36 | 5.9 | 2.12 | 2.08 | 4.11 | AWS | 4.5.1 | 9.0.7 |
+| Host OS | ansible | ansible-core | pwgen | oc | OCP |Cloud | Grafana operator| Grafana |
+|---------|---------|--------------|-------|----|-----|------|---------|---|
+| Fedora 36 | 5.9 | 2.12 | 2.08 | 4.11 | 4.10, 4.11 | AWS | 4.5.1 | 9.0.7 |
 
 ## Design Notes
 
