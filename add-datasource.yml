@@ -2,8 +2,6 @@
 - name: Add a datasource
   hosts: localhost
   gather_facts: false
-  tasks:
-    - name: Not ready yet!
-      debug:
-        msg: Not IMPLEMENTED
-
+  roles:
+    - common
+    - datasource
