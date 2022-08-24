@@ -1,13 +1,4 @@
 ---
-- name: find the URL for the thanos querier 
-  command: oc -n openshift-monitoring get route --field-selector metadata.name=thanos-querier -o json
-  register: prometheus_output
-  when: prometheus_route is not defined
-
-- name: store prometheus route
-  set_fact:
-    prometheus_route: "https://{{ prometheus_output.stdout | from_json | json_query('items[0].spec.host') }}"
-  when: prometheus_route is not defined
 
 - name: Generate a random password for Grafana
   command: pwgen {{ password_length }} 1
