@@ -1,4 +1,12 @@
 ---
+- name: Wait for up to 5m for the Grafana operator to be available
+  command:
+    cmd: oc -n {{ grafana_namespace }} get pod --selector=control-plane=controller-manager -o jsonpath='{.items[0].status.phase}'
+  register: pod_state
+  until: pod_state.stdout == "Running"
+  retries: 60
+  delay: 5
+
 - name: Deploying Grafana
   command:
     cmd: oc apply -f - 
