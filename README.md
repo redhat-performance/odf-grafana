@@ -9,6 +9,7 @@ before you start you'll need to satisfy the dependencies.
 you will need;  
 * ansible
 * ansible-core
+* python3-jmespath *(needed for Ansible's json_query function)*
 * oc (*binaries are [here](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)*)
 * pwgen
 
