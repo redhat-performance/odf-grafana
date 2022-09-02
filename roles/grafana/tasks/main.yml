@@ -15,15 +15,20 @@
 - name: Wait up to 5m for the external route to appear
   command:
     cmd: oc -n {{ grafana_namespace }} get route/grafana-route -o json
-  register: grafana_route
+  register: route
   retries: 60
   delay: 5
-  until: grafana_route.rc == 0
+  until: route.rc == 0
 
-- name: Extract the grafana route URL
+- name: Parse the route output
   set_fact:
-    grafana_route: "https://{{ grafana_route.stdout | from_json | json_query('spec.host') }}"
-  when: grafana_route.rc == 0
+    route_json: "{{ route.stdout|from_json}}"
+  when: route.rc == 0
+
+- name: Set the Grafana route URL
+  set_fact:
+    grafana_route: "https://{{ route_json.spec.host }}"
+  when: route.rc == 0
 
   
 
