@@ -1362,7 +1362,7 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "sum(ceph_osd_numpg)",
+              "expr": "sum(ceph_pg_total)",
               "instant": true,
               "range": false,
               "refId": "A"
