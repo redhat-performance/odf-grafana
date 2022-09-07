@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -173,6 +173,26 @@
         {
           "datasource": {
             "type": "prometheus",
+            "uid": "P1809F7CD0C75ACF3"
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 2,
+            "x": 2,
+            "y": 2
+          },
+          "id": 183,
+          "options": {
+            "content": "<br>\n<center><h1>${ocs_version}</h1></center>",
+            "mode": "html"
+          },
+          "pluginVersion": "9.0.7",
+          "title": "OCS Version",
+          "type": "text"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
             "uid": "${datasource}"
           },
           "fieldConfig": {
@@ -196,7 +216,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 2,
+            "x": 4,
             "y": 2
           },
           "id": 146,
@@ -265,7 +285,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 4,
+            "x": 6,
             "y": 2
           },
           "id": 169,
@@ -327,7 +347,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 6,
+            "x": 8,
             "y": 2
           },
           "id": 157,
@@ -391,7 +411,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 8,
+            "x": 10,
             "y": 2
           },
           "id": 147,
@@ -455,7 +475,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 10,
+            "x": 12,
             "y": 2
           },
           "id": 179,
@@ -521,7 +541,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 12,
+            "x": 14,
             "y": 2
           },
           "id": 181,
@@ -584,7 +604,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 14,
+            "x": 16,
             "y": 2
           },
           "id": 145,
@@ -647,7 +667,7 @@
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 16,
+            "x": 18,
             "y": 2
           },
           "id": 158,
@@ -683,94 +703,6 @@
           ],
           "title": "cephfs PV Count",
           "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "description": "Total of IOPS for rbd devices within the cluster",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "decimals": 0,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "short"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 18,
-            "y": 2
-          },
-          "id": 159,
-          "options": {
-            "displayMode": "basic",
-            "minVizHeight": 10,
-            "minVizWidth": 0,
-            "orientation": "horizontal",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showUnfilled": true
-          },
-          "pluginVersion": "9.0.7",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "round(sum(rate(node_disk_reads_completed_total{device=~\"rbd.*\"}[30s])),1)",
-              "format": "time_series",
-              "instant": false,
-              "interval": "",
-              "legendFormat": "Reads",
-              "range": true,
-              "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "round(sum(rate(node_disk_writes_completed_total{device=~\"rbd.*\"}[30s])),1)",
-              "format": "time_series",
-              "hide": false,
-              "instant": false,
-              "interval": "",
-              "legendFormat": "Writes",
-              "range": true,
-              "refId": "B"
-            }
-          ],
-          "title": "Client IOPS (rbd* devices)",
-          "type": "bargauge"
         },
         {
           "datasource": {
@@ -833,7 +765,7 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 6,
+            "w": 8,
             "x": 0,
             "y": 6
           },
@@ -841,9 +773,9 @@
           "options": {
             "legend": {
               "calcs": [
-                "lastNotNull",
+                "min",
                 "max",
-                "min"
+                "last"
               ],
               "displayMode": "table",
               "placement": "bottom"
@@ -871,55 +803,86 @@
           "type": "timeseries"
         },
         {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
           "datasource": {
             "type": "prometheus",
             "uid": "${datasource}"
           },
           "fieldConfig": {
             "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
               "unit": "locale"
             },
             "overrides": []
           },
-          "fill": 0,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
-            "w": 6,
-            "x": 6,
+            "w": 8,
+            "x": 8,
             "y": 6
           },
-          "hiddenSeries": false,
           "id": 103,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": true,
-            "max": true,
-            "min": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null",
           "options": {
-            "alertThreshold": true
+            "legend": {
+              "calcs": [
+                "min",
+                "max",
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
           },
-          "percentage": false,
           "pluginVersion": "9.0.7",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
           "targets": [
             {
               "datasource": {
@@ -927,44 +890,14 @@
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "(rate(ceph_pool_rd[65s]) + rate(ceph_pool_wr[65s])) * on(pool_id) group_left(name) (ceph_pool_metadata)",
+              "expr": "round(((rate(ceph_pool_rd[65s]) + rate(ceph_pool_wr[65s])) * on(pool_id) group_left(name) (ceph_pool_metadata)),1)",
               "legendFormat": "{{name}}",
               "range": true,
               "refId": "A"
             }
           ],
-          "thresholds": [],
-          "timeRegions": [],
           "title": "Cluster IOPS",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "mode": "time",
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "$$hashKey": "object:857",
-              "format": "locale",
-              "logBase": 1,
-              "min": "0",
-              "show": true
-            },
-            {
-              "$$hashKey": "object:858",
-              "format": "short",
-              "logBase": 1,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          "type": "timeseries"
         },
         {
           "datasource": {
@@ -1025,17 +958,17 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 6,
-            "x": 12,
+            "w": 8,
+            "x": 16,
             "y": 6
           },
           "id": 178,
           "options": {
             "legend": {
               "calcs": [
-                "lastNotNull",
+                "min",
                 "max",
-                "min"
+                "last"
               ],
               "displayMode": "table",
               "placement": "bottom"
@@ -1224,9 +1157,9 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 6,
-            "x": 18,
-            "y": 6
+            "w": 8,
+            "x": 0,
+            "y": 14
           },
           "id": 102,
           "options": {
@@ -1284,6 +1217,123 @@
           ],
           "title": "Cluster Capacity Usage",
           "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "Total of IOPS for rbd devices within the cluster",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 14
+          },
+          "id": 159,
+          "options": {
+            "legend": {
+              "calcs": [
+                "min",
+                "max",
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "9.0.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(sum(rate(node_disk_reads_completed_total{device=~\"rbd.*\"}[30s])),1)",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "Reads",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(sum(rate(node_disk_writes_completed_total{device=~\"rbd.*\"}[30s])),1)",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "Writes",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Client IOPS (rbd* devices)",
+          "type": "timeseries"
         }
       ],
       "targets": [
@@ -1323,8 +1373,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1336,7 +1385,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 15
+            "y": 3
           },
           "id": 167,
           "options": {
@@ -1415,8 +1464,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1431,7 +1479,7 @@
             "h": 8,
             "w": 8,
             "x": 2,
-            "y": 15
+            "y": 3
           },
           "id": 163,
           "options": {
@@ -1481,8 +1529,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1494,7 +1541,7 @@
             "h": 8,
             "w": 7,
             "x": 10,
-            "y": 15
+            "y": 3
           },
           "id": 165,
           "options": {
@@ -1575,8 +1622,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -1588,7 +1634,7 @@
             "h": 8,
             "w": 7,
             "x": 17,
-            "y": 15
+            "y": 3
           },
           "id": 170,
           "options": {
@@ -1687,8 +1733,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1778,8 +1823,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2099,8 +2143,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2207,8 +2250,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2507,8 +2549,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2617,8 +2658,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3890,8 +3930,8 @@
       {
         "current": {
           "selected": false,
-          "text": "ip-10-0-136-249.us-west-2.compute.internal",
-          "value": "ip-10-0-136-249.us-west-2.compute.internal"
+          "text": "ip-10-0-131-129.us-west-2.compute.internal",
+          "value": "ip-10-0-131-129.us-west-2.compute.internal"
         },
         "datasource": {
           "type": "prometheus",
@@ -3919,9 +3959,10 @@
       },
       {
         "current": {
+          "isNone": true,
           "selected": false,
-          "text": "rbd0",
-          "value": "rbd0"
+          "text": "None",
+          "value": ""
         },
         "datasource": {
           "type": "prometheus",
@@ -3995,6 +4036,32 @@
         "regex": "",
         "skipUrlSync": false,
         "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "4.11.0",
+          "value": "4.11.0"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "definition": "label_values(ocs_exporter_version, version)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "ocs_version",
+        "options": [],
+        "query": {
+          "query": "label_values(ocs_exporter_version, version)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
@@ -4020,6 +4087,6 @@
   "timezone": "utc",
   "title": "ODF Performance Analysis",
   "uid": "bmhO1bi4k",
-  "version": 15,
+  "version": 3,
   "weekStart": ""
 }
