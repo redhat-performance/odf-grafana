@@ -3301,7 +3301,7 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 8,
+            "w": 7,
             "x": 2,
             "y": 4
           },
@@ -3347,6 +3347,21 @@
               "color": {
                 "mode": "palette-classic"
               },
+              "custom": {
+                "axisLabel": "# PGs",
+                "axisPlacement": "auto",
+                "fillOpacity": 87,
+                "gradientMode": "hue",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 0,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
               "mappings": [],
               "min": 0,
               "thresholds": {
@@ -3364,24 +3379,33 @@
           },
           "gridPos": {
             "h": 8,
-            "w": 7,
-            "x": 10,
+            "w": 8,
+            "x": 9,
             "y": 4
           },
-          "id": 165,
+          "id": 247,
           "options": {
-            "displayMode": "basic",
-            "minVizHeight": 10,
-            "minVizWidth": 0,
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "hidden",
+              "placement": "bottom"
             },
-            "showUnfilled": false
+            "orientation": "vertical",
+            "showValue": "always",
+            "stacking": "none",
+            "text": {
+              "valueSize": 14
+            },
+            "tooltip": {
+              "mode": "none",
+              "sort": "none"
+            },
+            "xField": "ceph_daemon",
+            "xTickLabelRotation": -90,
+            "xTickLabelSpacing": 0
           },
           "pluginVersion": "9.0.7",
           "targets": [
@@ -3393,14 +3417,14 @@
               "editorMode": "code",
               "exemplar": false,
               "expr": "ceph_osd_numpg",
+              "format": "table",
               "instant": true,
-              "legendFormat": "{{ceph_daemon}}",
               "range": false,
               "refId": "A"
             }
           ],
-          "title": "PGs per OSD",
-          "type": "bargauge"
+          "title": "PG Distribution ",
+          "type": "barchart"
         },
         {
           "datasource": {
@@ -6595,7 +6619,7 @@
       "type": "row"
     }
   ],
-  "refresh": "15s",
+  "refresh": false,
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -6766,8 +6790,8 @@
     ]
   },
   "time": {
-    "from": "now-1h",
-    "to": "now"
+    "from": "2022-09-15T04:00:00.000Z",
+    "to": "2022-09-15T12:59:59.000Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -6787,6 +6811,6 @@
   "timezone": "utc",
   "title": "ODF Performance Analysis",
   "uid": "bmhO1bi4k",
-  "version": 13,
+  "version": 14,
   "weekStart": ""
 }
