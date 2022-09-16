@@ -1164,6 +1164,434 @@
         }
       ],
       "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 191,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "Network receive + transmit bytes for all active (UP) physical interfaces on each host in the cluster",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "gradientMode": "hue",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "binBps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 8,
+            "x": 0,
+            "y": 16
+          },
+          "id": 185,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "expr": "(sum by(instance) (rate(node_network_receive_bytes_total{device=~\"(eth|en).*\"}[1m]) * on(instance, device) node_network_info{operstate=\"up\"})) +\n(sum by(instance) (rate(node_network_transmit_bytes_total{device=~\"(eth|en).*\"}[1m]) * on(instance, device) node_network_info{operstate=\"up\"}))",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "expr": "sum by(instance) (rate(node_network_transmit_bytes_total{device=~\"(eth|en).*\"}[1m]) * on(instance, device) node_network_info{operstate=\"up\"})",
+              "hide": true,
+              "legendFormat": "{{instance}}/TX",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Total Bandwidth by Host",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "Network receive + transmit bytes for all active (UP) physical interfaces on each host in the cluster",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "gradientMode": "hue",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "binBps"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "e28-h01-r750.alias.bos.scalelab.redhat.com/RX"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "e28-h01-r750.alias.bos.scalelab.redhat.com/TX"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 8,
+            "x": 8,
+            "y": 16
+          },
+          "id": 187,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "expr": "(rate(node_network_receive_bytes_total{instance=\"$worker\",device=~\"(eth|en).*\"}[1m]) * on(instance, device) node_network_info{operstate=\"up\"})",
+              "legendFormat": "{{device}}/RX",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "expr": "(rate(node_network_transmit_bytes_total{instance=\"$worker\",device=~\"(eth|en).*\"}[1m]) * on(instance, device) node_network_info{operstate=\"up\"}) * -1",
+              "hide": false,
+              "legendFormat": "{{device}}/TX",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Network Load : $worker",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "Links speed and MTU size on physical interfaces in an UP state",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto",
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Link Speed"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "12500000": {
+                            "index": 0,
+                            "text": "100Mb"
+                          },
+                          "125000000": {
+                            "index": 1,
+                            "text": "1Gb"
+                          },
+                          "1250000000": {
+                            "index": 2,
+                            "text": "10Gb"
+                          },
+                          "3125000000": {
+                            "index": 3,
+                            "text": "25Gb"
+                          },
+                          "12500000000": {
+                            "index": 5,
+                            "text": "100Gb"
+                          },
+                          "5000000000": {
+                            "index": 4,
+                            "text": "40Gb"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 174
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "device"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 136
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "MTU Size"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 193
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 7,
+            "x": 16,
+            "y": 16
+          },
+          "id": 189,
+          "options": {
+            "footer": {
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "frameIndex": 1,
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "9.0.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "node_network_speed_bytes{instance=\"$worker\",device=~\"(eno|eth|ens).*\"} * on(instance,device) node_network_info{operstate=\"up\"}",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "range": false,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "node_network_mtu_bytes{instance=\"$worker\",device=~\"(eno|eth|ens).*\"} * on(instance,device) node_network_info{operstate=\"up\"}",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "range": false,
+              "refId": "B"
+            }
+          ],
+          "title": "NIC Configuration : $worker",
+          "transformations": [
+            {
+              "id": "seriesToRows",
+              "options": {}
+            },
+            {
+              "id": "seriesToColumns",
+              "options": {
+                "byField": "device"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time 1": true,
+                  "Time 2": true,
+                  "instance 1": true,
+                  "instance 2": true
+                },
+                "indexByName": {},
+                "renameByName": {
+                  "Value #A": "Link Speed",
+                  "Value #B": "MTU Size"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "title": "Networking",
+      "type": "row"
     }
   ],
   "refresh": "",
@@ -1192,8 +1620,8 @@
       {
         "current": {
           "selected": false,
-          "text": "4.11.2",
-          "value": "4.11.2"
+          "text": "4.11.4",
+          "value": "4.11.4"
         },
         "datasource": {
           "type": "prometheus",
@@ -1214,17 +1642,44 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "e28-h01-r750.alias.bos.scalelab.redhat.com",
+          "value": "e28-h01-r750.alias.bos.scalelab.redhat.com"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "definition": "label_values(kube_node_role{role=~'(worker|infra)'}, node)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Worker",
+        "multi": false,
+        "name": "worker",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_node_role{role=~'(worker|infra)'}, node)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "OCP Overview",
   "uid": "fbsbqwi4k",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }

@@ -8,7 +8,6 @@ before you start you'll need to satisfy the dependencies.
 
 you will need;  
 * ansible
-* ansible-core
 * oc (*binaries are [here](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)*)
 * pwgen
 
@@ -16,7 +15,7 @@ Once you have these packages/binaries in place, download this repo to your machi
 
 | Filename | Purpose |
 |----------|---------|
-| deploy-grafana.yml | creates a new namespace and deploys Grafana |
+| deploy-grafana.yml | creates a new namespace and deploys Grafana with default dashboards|
 | add-dashboard.yml | Load a dashboard to an existing Grafana deployment |
 | purge-grafana.yml | deletes your grafana namespace (sledgehammer!)
 
@@ -26,7 +25,7 @@ The `group_vars/all.yml` file defines a number of parameters that can be used to
 
 
 ### Deploying Grafana
-Use the deploy-grafana.yml playbook
+Run the deploy-grafana.yml playbook
 ```
 # ansible-playbook deploy-grafana.yml
 ```
@@ -83,14 +82,45 @@ set this up correctly you will need to set the following variables in `group_var
 # ansible-playbook add-datasource.yml
 ```
 
+## Included Dashboards
+
+The deployment installs several dashboards to help provide OCP and ODF performance insights out-of-the-box.
+
+### OCP Overview
+The OCP overview provides a high level overview of the OCP platform.  
+
+
+![ocp overview](assets/OCP%20Overview.png)
+
+### ODF Performance Analysis
+There are many different facets to ODF, so the ODF dashboard is split into multiple rows covering the following types of information;
+
+- Ceph Overview
+- Noobaa Overview
+- radosgw Overview
+- Data distribution
+- Physical Disk Activity - by host and by OSD
+- Network load (with NIC speed and MTU size)
+- CPU and Memory analysis for Ceph and Noobaa daemons
+  
+For 'bonus points', if you have the mgr/prometheus rbd_stats_pools defined, you can also see per PVC performance.
+
+It's a lot!
+
+Here's a screenshot with all rows expanded (they're collapsed by default), to give you a sense of the type of data that is visualised.
+
+![odf performance analysis](assets/odf%20performance%20analysis.png)
+
 
 ## Configurations Tested
 
 The playbooks have been tested against the following config
 
-| Host OS | ansible | ansible-core | pwgen | oc | OCP |Cloud | Grafana operator| Grafana |
-|---------|---------|--------------|-------|----|-----|------|---------|---|
-| Fedora 36 | 5.9 | 2.12 | 2.08 | 4.11 | 4.10, 4.11 | AWS | 4.5.1 | 9.0.7 |
+| Host OS | ansible | pwgen | oc | OCP | Cloud | Grafana operator| Grafana |
+|---------|---------|-------|----|-----|-------|------|---------|
+| Fedora 36 | 5.9 | 2.08 | 4.11 | 4.10, 4.11 | AWS | 4.5.1 | 9.0.7 |
+| RHEL 8.6 | 2.9 | 2.08 (EPEL) | 4.11 | 4.10, 4.11 | AWS, Bare-metal | 4.5.1 | 9.0.7 |
+
 
 ## Design Notes
 
