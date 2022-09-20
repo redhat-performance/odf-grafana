@@ -2141,7 +2141,7 @@
                 "scaleDistribution": {
                   "type": "linear"
                 },
-                "showPoints": "auto",
+                "showPoints": "never",
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
@@ -2176,6 +2176,7 @@
             "y": 6
           },
           "id": 208,
+          "interval": "1m",
           "options": {
             "legend": {
               "calcs": [],
@@ -2194,7 +2195,7 @@
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum by(namespace, managedBy, job, service) (rate(NooBaa_providers_ops_read_num[1m]))",
+              "expr": "round(sum by(namespace, managedBy, job, service) (rate(NooBaa_providers_ops_read_num[1m])),1)",
               "legendFormat": "Read OPs ",
               "range": true,
               "refId": "A"
@@ -2205,7 +2206,7 @@
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum by(namespace, managedBy, job, service) (rate(NooBaa_providers_ops_write_num[1m]))",
+              "expr": "round(sum by(namespace, managedBy, job, service) (rate(NooBaa_providers_ops_write_num[1m])),1)",
               "hide": false,
               "legendFormat": "Write OPs",
               "range": true,
@@ -2243,7 +2244,7 @@
                 "scaleDistribution": {
                   "type": "linear"
                 },
-                "showPoints": "auto",
+                "showPoints": "never",
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
@@ -2278,6 +2279,7 @@
             "y": 6
           },
           "id": 207,
+          "interval": "1m",
           "options": {
             "legend": {
               "calcs": [],
@@ -2650,7 +2652,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 23
+            "y": 3
           },
           "id": 226,
           "options": {
@@ -2745,7 +2747,7 @@
             "h": 8,
             "w": 10,
             "x": 2,
-            "y": 23
+            "y": 3
           },
           "id": 233,
           "options": {
@@ -2831,7 +2833,7 @@
             "h": 8,
             "w": 10,
             "x": 12,
-            "y": 23
+            "y": 3
           },
           "id": 229,
           "options": {
@@ -2905,7 +2907,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 27
+            "y": 7
           },
           "id": 230,
           "options": {
@@ -2972,7 +2974,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 31
+            "y": 11
           },
           "id": 234,
           "options": {
@@ -3063,7 +3065,7 @@
             "h": 8,
             "w": 10,
             "x": 2,
-            "y": 31
+            "y": 11
           },
           "id": 228,
           "options": {
@@ -3162,7 +3164,7 @@
             "h": 8,
             "w": 10,
             "x": 12,
-            "y": 31
+            "y": 11
           },
           "id": 231,
           "options": {
@@ -3236,7 +3238,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 35
+            "y": 15
           },
           "id": 235,
           "options": {
@@ -6896,6 +6898,6 @@
   "timezone": "utc",
   "title": "ODF Performance Analysis",
   "uid": "bmhO1bi4k",
-  "version": 15,
+  "version": 16,
   "weekStart": ""
 }
