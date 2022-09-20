@@ -1662,7 +1662,11 @@
                 "type": "prometheus",
                 "uid": "${datasource}"
               },
+              "editorMode": "code",
+              "exemplar": false,
               "expr": "NooBaa_num_objects_buckets_claims",
+              "instant": true,
+              "range": false,
               "refId": "A"
             }
           ],
@@ -1721,7 +1725,11 @@
                 "type": "prometheus",
                 "uid": "${datasource}"
               },
+              "editorMode": "code",
+              "exemplar": false,
               "expr": "count(NooBaa_bucket_size_quota > 0) or vector(0)",
+              "instant": true,
+              "range": false,
               "refId": "A"
             }
           ],
@@ -1942,12 +1950,7 @@
             }
           ],
           "title": "Capacity Used",
-          "transformations": [
-            {
-              "id": "labelsToFields",
-              "options": {}
-            }
-          ],
+          "transformations": [],
           "type": "gauge"
         },
         {
@@ -2017,7 +2020,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "Sum of Core usage for ALL noobaa daemons",
+          "description": "Sum of cpu usage for ALL noobaa daemons expessed as a percentage of cpu cores (i.e. > 100% = 1 core, 200% = 2 cores)",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -2498,6 +2501,108 @@
           "title": "Object Size Distribution",
           "transformations": [],
           "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "description": "Count of the number of noobaa endpoints in the cluster. The red line depicts the scaling limit.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "max": 12,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 14
+          },
+          "id": 249,
+          "options": {
+            "legend": {
+              "calcs": [
+                "min",
+                "max",
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "9.0.7",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "count(container_last_seen{pod=~\"noobaa-endpoint.*\", namespace=\"openshift-storage\",image!=\"\"})",
+              "instant": false,
+              "legendFormat": "Endpoints Active",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Noobaa Endpoints Active",
+          "transformations": [],
+          "type": "timeseries"
         }
       ],
       "title": "Noobaa Overview",
@@ -2545,7 +2650,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 3
+            "y": 23
           },
           "id": 226,
           "options": {
@@ -2640,7 +2745,7 @@
             "h": 8,
             "w": 10,
             "x": 2,
-            "y": 3
+            "y": 23
           },
           "id": 233,
           "options": {
@@ -2726,7 +2831,7 @@
             "h": 8,
             "w": 10,
             "x": 12,
-            "y": 3
+            "y": 23
           },
           "id": 229,
           "options": {
@@ -2800,7 +2905,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 7
+            "y": 27
           },
           "id": 230,
           "options": {
@@ -2867,7 +2972,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 11
+            "y": 31
           },
           "id": 234,
           "options": {
@@ -2958,7 +3063,7 @@
             "h": 8,
             "w": 10,
             "x": 2,
-            "y": 11
+            "y": 31
           },
           "id": 228,
           "options": {
@@ -3057,7 +3162,7 @@
             "h": 8,
             "w": 10,
             "x": 12,
-            "y": 11
+            "y": 31
           },
           "id": 231,
           "options": {
@@ -3131,7 +3236,7 @@
             "h": 4,
             "w": 2,
             "x": 0,
-            "y": 15
+            "y": 35
           },
           "id": 235,
           "options": {
@@ -3195,8 +3300,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -3287,8 +3391,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3368,8 +3471,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -3471,8 +3573,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -3583,8 +3684,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3674,8 +3774,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3995,8 +4094,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4103,8 +4201,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4403,8 +4500,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4513,8 +4609,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -5427,8 +5522,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -5806,8 +5900,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -5915,8 +6008,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -6001,8 +6093,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -6093,8 +6184,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -6198,8 +6288,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -6303,8 +6392,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -6379,8 +6467,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -6444,8 +6531,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -6619,7 +6705,7 @@
       "type": "row"
     }
   ],
-  "refresh": false,
+  "refresh": "15s",
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -6657,7 +6743,6 @@
       },
       {
         "current": {
-          "isNone": true,
           "selected": false,
           "text": "None",
           "value": ""
@@ -6790,8 +6875,8 @@
     ]
   },
   "time": {
-    "from": "2022-09-15T04:00:00.000Z",
-    "to": "2022-09-15T12:59:59.000Z"
+    "from": "now-1h",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -6811,6 +6896,6 @@
   "timezone": "utc",
   "title": "ODF Performance Analysis",
   "uid": "bmhO1bi4k",
-  "version": 14,
+  "version": 15,
   "weekStart": ""
 }
