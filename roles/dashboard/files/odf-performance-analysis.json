@@ -5118,7 +5118,7 @@
             "h": 11,
             "w": 12,
             "x": 0,
-            "y": 8
+            "y": 28
           },
           "hiddenSeries": false,
           "id": 2,
@@ -5208,7 +5208,7 @@
             "h": 11,
             "w": 12,
             "x": 12,
-            "y": 8
+            "y": 28
           },
           "hiddenSeries": false,
           "id": 14,
@@ -5243,7 +5243,7 @@
                 "uid": "${datasource}"
               },
               "exemplar": true,
-              "expr": "label_replace(container_memory_rss{container=~\"osd|rbd-mirror|mgr|mon|mds\", namespace=\"openshift-storage\"},\"daemon\", \"$1\", \"pod\", \"rook-ceph-(.*)\")",
+              "expr": "label_replace(container_memory_rss{container=~\"osd|rbd-mirror|mgr|mon|mds|rgw\", namespace=\"openshift-storage\"},\"daemon\", \"$1\", \"pod\", \"rook-ceph-(.*)\")",
               "hide": false,
               "interval": "",
               "legendFormat": "{{daemon}}",
@@ -5323,7 +5323,7 @@
             "h": 11,
             "w": 12,
             "x": 0,
-            "y": 9
+            "y": 29
           },
           "hiddenSeries": false,
           "id": 148,
@@ -5413,7 +5413,7 @@
             "h": 11,
             "w": 12,
             "x": 12,
-            "y": 9
+            "y": 29
           },
           "hiddenSeries": false,
           "id": 149,
@@ -6898,6 +6898,6 @@
   "timezone": "utc",
   "title": "ODF Performance Analysis",
   "uid": "bmhO1bi4k",
-  "version": 16,
+  "version": 18,
   "weekStart": ""
 }
