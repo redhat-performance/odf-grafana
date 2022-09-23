@@ -1,5 +1,5 @@
 ---
-- name: Purge standaline Grafana namespace
+- name: Purge standalone Grafana namespace
   hosts: localhost
   gather_facts: false
   vars:
@@ -7,7 +7,7 @@
   tasks:
     - name: Check namespace is set 
       fail:
-        msg: "You must set the grafana_namespace variable - Hint: -e grafana_namespace=mygrafana"
+        msg: "You must set the grafana_namespace variable - Hint: -e grafana_namespace=perfscale"
       when: grafana_namespace | length == 0
 
     - name: Gather available namespaces
