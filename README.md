@@ -21,7 +21,7 @@ Once you have these packages/binaries in place, download this repo to your machi
 
 
 ## Usage
-The `group_vars/all.yml` file defines a number of parameters that can be used to tweak a deploement, but normally you should need to change anything.
+The `group_vars/all.yml` file defines a number of parameters that can be used to tweak a deployment, but normally you should need to change anything.
 
 
 ### Deploying Grafana
@@ -67,7 +67,7 @@ If you need to add dashboards to your instance after a deployment, you can use t
 ```
 # ansible-playbook add-dashboard.yml -e dashboard_path=<insert your path here>
 ```
-NB. For the dashboard to work, it must define it's datasources as $datasource. This is a simple way to make your dashboards portable.
+NB. For the dashboard to work, it must define it's datasource as $datasource. This is a simple way to make your dashboards portable.
 
 
 ### Adding a datasource
