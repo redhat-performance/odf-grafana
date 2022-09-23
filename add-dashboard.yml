@@ -1,8 +1,26 @@
 ---
-- name: test dashboards
+- name: Add a Dashboard
   hosts: localhost
   gather_facts: false
-  roles:
-    - common 
-    - dashboard
+  vars:
+    star_dashboards: no
+    dashboard_count: 1
+  pre_tasks:
+    - name: Abort if dashboard_path is not provided
+      fail:
+        msg: You must provide dashboard_path to point to the full path of the dashboard to upload
+      when: dashboard_path is undefined
 
+    - name: Stat the path
+      ansible.builtin.stat:
+        path: "{{ dashboard_path }}"
+      register: file_data
+
+    - name: Fail of the path can not be found
+      fail:
+        msg: "{{ dashboard_path }} unusable. It must be readable by you and be a full path"
+      when: not file_data.stat.exists or file_data.stat.isdir or not file_data.stat.readable
+
+  roles:
+    - common
+    - dashboard
