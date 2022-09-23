@@ -30,6 +30,19 @@
     grafana_route: "https://{{ route_json.spec.host }}"
   when: route.rc == 0
 
+- name: Wait for Grafana to be accessible
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/health"
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    method: GET
+    validate_certs: no
+    force_basic_auth: yes
+  register: grafana_health
+  retries: 60
+  delay: 5
+  until: grafana_health.status == 200
+
   
 
 
