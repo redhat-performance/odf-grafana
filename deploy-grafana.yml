@@ -2,6 +2,8 @@
 - name: Deploy Grafana
   hosts: localhost
   gather_facts: False
+  vars: 
+    star_dashboards: yes
   roles:
     - common
     - prepare
