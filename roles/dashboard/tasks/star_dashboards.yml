@@ -1,0 +1,39 @@
+---
+- name: Abort if grafana variables are not defined
+  fail:
+    msg: You need to set grafana_route, grafana_user and grafana_password to be able to star dashboards
+  when: 
+    - grafana_route is undefined or grafana_user is undefined or grafana_password is undefined
+
+- name: Wait for the API to provide a list of dashboards just uploaded
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/search?query=&type=dash-db"
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    method: GET
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    status_code: 200  
+  register: search_response
+  retries: 60
+  delay: 5
+  until: 
+    - search_response.json is defined
+    - "{{ search_response.json | length }} == {{ dashboard_count }}"
+
+
+- name: Star the dashboards
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/user/stars/dashboard/{{ item.id }}"
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    method: POST
+    force_basic_auth: yes
+    validate_certs: no
+    body_format: json
+    status_code:
+      - 200
+      - 500
+  with_items: "{{ search_response.json }}"
+
