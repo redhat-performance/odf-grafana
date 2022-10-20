@@ -41,7 +41,7 @@
   when:
     - token is not defined
 
-- name: Add datasource to Grafana
+- name: Add Prometheus datasource to Grafana
   command:
     cmd: oc apply -f -
-    stdin: "{{ lookup('template', 'datasource.j2') }}"
+    stdin: "{{ lookup('template', 'prometheus_datasource.j2') }}"
