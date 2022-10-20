@@ -5344,7 +5344,7 @@
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
-                  "mode": "normal"
+                  "mode": "none"
                 },
                 "thresholdsStyle": {
                   "mode": "off"
@@ -5437,7 +5437,7 @@
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
-                  "mode": "normal"
+                  "mode": "none"
                 },
                 "thresholdsStyle": {
                   "mode": "off"
@@ -5496,7 +5496,7 @@
               "refId": "B"
             }
           ],
-          "title": "Nooba Pod Memory Utilisation",
+          "title": "Noobaa Pod Memory Utilisation",
           "type": "timeseries"
         }
       ],
