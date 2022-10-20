@@ -45,3 +45,8 @@
   command:
     cmd: oc apply -f -
     stdin: "{{ lookup('template', 'prometheus_datasource.j2') }}"
+
+- name: Add Infinity datasource to Grafana
+  command:
+    cmd: oc apply -f -
+    stdin: "{{ lookup('template', 'infinity_datasource.j2') }}"
