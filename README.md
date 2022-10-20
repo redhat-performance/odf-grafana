@@ -70,12 +70,12 @@ If you need to add dashboards to your instance after a deployment, you can use t
 NB. For the dashboard to work, it must define it's datasource as $datasource. This is a simple way to make your dashboards portable.
 
 
-### Adding a datasource
+### Adding a datasource (needs testing!)
 If you need to attach your grafana instance to a secondary cluster's prometheus instance, you can use the `add-datasource.yml` playbook. To
 set this up correctly you will need to set the following variables in `group_vars/all.yml'
 
 * `prometheus_route`: the external route to prometheus instance
-* `datasource_name`: the name to use inside your grafana instance for this datasource
+* `prometheus_datasource_name`: the name to use inside your grafana instance for this datasource
 * `token`: the token from a suitable serviceaccount in the other cluster that permits access to prometheus data (prometheus-k8s)
 
 ```
