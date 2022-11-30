@@ -1,7 +1,7 @@
 ---
 
 - name: Generate a random password for Grafana
-  command: pwgen {{ password_length }} 1
+  command: pwgen {{ password_length }} -1
   register: pwgen_out
   when: grafana_password is not defined
 
