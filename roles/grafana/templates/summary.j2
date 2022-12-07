@@ -8,7 +8,11 @@ Grafana Details
   Password  : {{ grafana_password }}
   Login URL : {{ grafana_route }}
 
-Prometheus Datasource
-  Prometheus URL  : {{ prometheus_route }}
-  Service Account : {{ prometheus_service_account }}
+Prometheus Datasource Connectivity
+  Monitoring namespace : openshift-monitoring
+  Prometheus URL       : {{ prometheus_route }}
+  Service Account Used : {{ grafana_service_account }}
+  Token used           : {{ token }}
+
+
 
