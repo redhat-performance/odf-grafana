@@ -1,1 +1,2 @@
 prometheus_service_account: prometheus-k8s
+grafana_service_account: grafana-serviceaccount
