@@ -5,9 +5,9 @@ metadata:
   name: prometheus
   namespace: {{ grafana_namespace }}
 spec:
-  name: {{ datasource_name }}.yml
+  name: {{ prometheus_datasource_name }}.yml
   datasources:
-    - name: {{ datasource_name }}
+    - name: {{ prometheus_datasource_name }}
       type: prometheus
       access: server
       url: {{ prometheus_route }}

@@ -1,4 +1,12 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-plugins
+  namespace: {{ grafana_namespace }}
+data:
+  GF_INSTALL_PLUGINS: yesoreyeram-infinity-datasource
+---
 apiVersion: integreatly.org/v1alpha1
 kind: Grafana
 metadata:
@@ -6,6 +14,10 @@ metadata:
   namespace: {{ grafana_namespace }}
 spec:
   baseImage: docker.io/grafana/grafana:{{ grafana_image_tag }}
+  deployment:
+    envFrom:
+      - configMapRef:
+          name: grafana-plugins
   client:
     preferService: true
   ingress:
@@ -39,4 +51,3 @@ spec:
     requests:
       cpu: {{ grafana_cpu_requests }}
       memory: {{ grafana_mem_requests }}
-

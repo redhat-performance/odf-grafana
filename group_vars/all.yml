@@ -5,8 +5,10 @@
 
 # grafana_namespace: mygrafana
 
-# prometheus datasource name - defaults to prometheus
-# datasource_name: prometheus
+
+# Datasources
+# prometheus_datasource_name: prometheus
+# infinity_datasource_name: infinity
 
 # prometheus_route is the URL to the thanos querier endpoint of OCP.
 # when this is undefined, the playbook will use the local prometheus route when 

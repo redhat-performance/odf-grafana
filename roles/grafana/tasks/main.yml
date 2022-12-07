@@ -43,6 +43,9 @@
   delay: 5
   until: grafana_health.status == 200
 
-  
-
-
+- name: Record the grafana login credentials, locally
+  ansible.builtin.template:
+    src: ../templates/credentials.j2
+    dest: ~/odf-grafana-credentials
+    mode: '0600'
+ 

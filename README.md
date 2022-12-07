@@ -39,13 +39,20 @@ Deployment Summary
 Grafana Details
   Namespace : mygrafana
   User      : grafana
-  Password  : aih6ohGoo0aeveez
-  Login URL : https://grafana-route-mygrafana.apps.my-odf.aws.myteam.org
+  Password  : mysupersecretpassword
+  Login URL : https://grafana-route-mygrafana.apps.cuznerp-odf-test.aws.mycompany.org
 
-Prometheus Datasource
-  thanos URL      : https://thanos-querier-openshift-monitoring.apps.my-odf.aws.myteam.org
-  Service Account : prometheus-k8s
+Prometheus Datasource Connectivity
+  Monitoring namespace : openshift-monitoring
+  Prometheus URL       : https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
+  Service Account Used : grafana-serviceaccount
+  Token used           : <service account token>
+
 ```
+
+NB. For later reference, the `deploy-grafana.yml` playbook creates an `odf-grafana-credentials` file in your home directory,
+which contains a record of the password used/generated for the grafana login.
+
 Use the grafana information to login to your instance and get started! The screen capture below shows you the Prometheus data source definition and the default ODF dashboard.
 
 ![grafana UI](assets/grafana-dashboard.gif)
@@ -70,13 +77,13 @@ If you need to add dashboards to your instance after a deployment, you can use t
 NB. For the dashboard to work, it must define it's datasource as $datasource. This is a simple way to make your dashboards portable.
 
 
-### Adding a datasource
+### Adding a datasource (needs further testing!)
 If you need to attach your grafana instance to a secondary cluster's prometheus instance, you can use the `add-datasource.yml` playbook. To
 set this up correctly you will need to set the following variables in `group_vars/all.yml'
 
-* `prometheus_route`: the external route to prometheus instance
-* `datasource_name`: the name to use inside your grafana instance for this datasource
-* `token`: the token from a suitable serviceaccount in the other cluster that permits access to prometheus data (prometheus-k8s)
+* `prometheus_route`: the external route to main thanos-querier instance within the openshift-monitoring namespace
+* `prometheus_datasource_name`: the name to use inside your grafana instance for this datasource
+* `token`: the token from a suitable serviceaccount in the other cluster that permits access to prometheus data
 
 ```
 # ansible-playbook add-datasource.yml
@@ -119,6 +126,7 @@ The playbooks have been tested against the following config
 | Host OS | ansible | pwgen | oc | OCP | Cloud | Grafana operator| Grafana |
 |---------|---------|-------|----|-----|-------|------|---------|
 | Fedora 36 | 5.9 | 2.08 | 4.11 | 4.10, 4.11 | AWS | 4.5.1 | 9.0.7 |
+| Fedora 37 | 7.0 | 2.08 | 4.11 | 4.11 | AWS | 4.8.0 | 9.3.1 |
 | RHEL 8.6 | 2.9 | 2.08 (EPEL) | 4.11 | 4.10, 4.11 | AWS, Bare-metal | 4.5.1 | 9.0.7 |
 
 

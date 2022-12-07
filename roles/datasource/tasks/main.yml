@@ -1,47 +1,37 @@
 ---
-- name: Fetch the prometheus SA token to use for the datasource
-  block:
-    # use a service account token since these don't expire
-    # NB. get-token is deprecated, but still used in OCP 4.10 docs: https://access.redhat.com/solutions/2972601
-    - name: Try to retrieve token from the prometheus service-account (OCP 4.10)
-      command: "oc -n openshift-monitoring sa get-token {{ prometheus_service_account }}"
-      register: token_output
+- name: Grant the grafana service account the cluster-monitoring-view
+  command: "oc adm policy add-cluster-role-to-user cluster-monitoring-view -z {{ grafana_service_account }}"
 
-    - name: Set token from get-token (OCP 4.10)
-      set_fact:
-        token: "{{ token_output.stdout }}"
-      when: token_output.rc == 0
+- name: Determine the grafana service account's token name
+  command: "oc -n {{ grafana_namespace }} get sa {{ grafana_service_account }} -o jsonpath='{.secrets[0].name}'"
+  register: secret_name
 
-    - name: Looking for ServiceAccount secret (OCP 4.11+)
-      command: "oc -n openshift-monitoring get sa {{ prometheus_service_account }} -o jsonpath='{.secrets[0].name}'"
-      register: secret_name
-      when:
-        - token_output.rc > 0
+- name: Fetch the token
+  command: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
+  register: sa_secret
 
-    - name: Extract secret from ServiceAccount (OCP 4.11+)
-      command: "oc -n openshift-monitoring get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
-      register: sa_secret
-      when:
-        - secret_name is defined
-
-    - name: Set token from Serviceaccount secret (OCP 4.11)
-      set_fact:
-        token: "{{ sa_secret.stdout }}"
-      when:
-        - token_output.rc > 0
-        - secret_name.rc == 0
-
-  ignore_errors: true
+- name: Set the token from Service Account secret
+  set_fact:
+    token: "{{ sa_secret.stdout }}"
   when:
-    - token is not defined
+    - secret_name.rc == 0
 
-- name: Fail if we can't determine the token to use to connect to Prometheus
+- name: Show token
+  debug:
+    msg: "{{ token }}"
+
+- name: Fail if we can't determine the token
   fail:
-    msg: "Unable to get a token from the {{ prometheus_service_account }} SA"
+    msg: "Unable to get the token from the {{ grafana_service_account }} Service Account"
   when:
-    - token is not defined
+    - secret_name.rc > 0 
 
-- name: Add datasource to Grafana
+- name: Add Prometheus datasource to Grafana
   command:
     cmd: oc apply -f -
-    stdin: "{{ lookup('template', 'datasource.j2') }}"
+    stdin: "{{ lookup('template', 'prometheus_datasource.j2') }}"
+
+- name: Add Infinity datasource to Grafana
+  command:
+    cmd: oc apply -f -
+    stdin: "{{ lookup('template', 'infinity_datasource.j2') }}"
