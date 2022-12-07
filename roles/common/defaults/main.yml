@@ -1,2 +1,2 @@
 grafana_namespace: perfscale
-prometheus_route: https://prometheus-k8s.openshift-monitoring.svc.cluster.local:9091
+prometheus_route: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
