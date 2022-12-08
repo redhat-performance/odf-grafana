@@ -57,6 +57,13 @@ Use the grafana information to login to your instance and get started! The scree
 
 ![grafana UI](assets/grafana-dashboard.gif)
 
+#### Resource Requirements
+The grafana operator supports tuning the resources allocated to the grafana pod. The
+defaults are normally fine (1/2 core and 1GB of memory), but if your pod is in a pending
+state due to resources, you can specify reduced requirements by updating your `all.yml`
+file. The *"Resource Limits"* section contains some defaults for cpu and memory that have
+been confirmed to work in smaller OCP environments.
+
 ### Removing the Grafana deployment
 
 Once your done with your grafana instance either delete the namespace manually to tidy things up or run the purge playbook.
