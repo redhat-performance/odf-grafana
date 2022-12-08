@@ -1,24 +1,43 @@
+
+##################
+# Authentication #
+##################
+
 # grafana_user: grafana
-
 # password must be at least 16 chars in length
-# grafana_password: fred
+# grafana_password: mysupersecretpassword
+# grafana_namespace: perfscale
 
-# grafana_namespace: mygrafana
+###################
+# Resource Limits #
+###################
 
+# for resource constrained environments, the default resource spec may result in your
+# pods getting stuck in a pending state. You can lower the cpu/mem requests to
+# the following;
+# grafana_cpu_requests: 128m
+# grafana_mem_requests: 256Mi
 
-# Datasources
+###############
+# Datasources #
+###############
+
 # prometheus_datasource_name: prometheus
 # infinity_datasource_name: infinity
 
 # prometheus_route is the URL to the thanos querier endpoint of OCP.
-# when this is undefined, the playbook will use the local prometheus route when 
+# when this is undefined, the playbook will use the local thanos-querier route when 
 # defining the prometheus datasource. If you are adding a second prometheus datasource
 # for another OCP instance, you're going to need to set these variables from the
 # other OCP's configuration  
-#
-# prometheus_route: < thanos-querier route >
-# token: <api token from oc -n openshift-monitoring sa get-token prometheus-k8s>
 
+# prometheus_route: < thanos-querier route >
+# token: <api token from oc -n openshift-monitoring sa get-token "some service account">
+
+##############
+# Dashboards #
+##############
 # normally loading dashboard is done by iterating over the roles/dashboard/files directory
 # but you can allso explicitly load a dashboard by full path using the following
+
 # dashboard_path: <full path to json file>
