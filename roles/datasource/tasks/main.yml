@@ -1,6 +1,6 @@
 ---
-- name: Grant the grafana service account the cluster-monitoring-view
-  command: "oc adm policy add-cluster-role-to-user cluster-monitoring-view -z {{ grafana_service_account }}"
+- name: Grant the grafana service account the prometheus-k8s
+  command: "oc adm policy add-cluster-role-to-user prometheus-k8s -z {{ grafana_service_account }}"
 
 - name: Determine the grafana service account's token name
   command: "oc -n {{ grafana_namespace }} get sa {{ grafana_service_account }} -o jsonpath='{.secrets[0].name}'"
