@@ -1,13 +1,13 @@
 ---
 - name: Grant the grafana service account the prometheus-k8s
-  command: "oc adm policy add-cluster-role-to-user prometheus-k8s -z {{ grafana_service_account }}"
+  command: "oc -n {{ grafana_namespace }} adm policy add-cluster-role-to-user prometheus-k8s -z {{ grafana_service_account }}"
 
 - name: Determine the grafana service account's token name
   command: "oc -n {{ grafana_namespace }} get sa {{ grafana_service_account }} -o jsonpath='{.secrets[0].name}'"
   register: secret_name
 
 - name: Fetch the token
-  command: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
+  shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.data.token}' | base64 -d"
   register: sa_secret
 
 - name: Set the token from Service Account secret
