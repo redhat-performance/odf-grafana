@@ -6,9 +6,14 @@
   command: "oc -n {{ grafana_namespace }} get sa {{ grafana_service_account }} -o jsonpath='{.secrets[0].name}'"
   register: secret_name
 
-- name: Fetch the token
+- name: Fetch the token - method 1
   shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.data.token}' | base64 -d"
   register: sa_secret
+
+- name: Fetch the token - method 2
+  shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
+  register: sa_secret
+  when: not sa_secret.stdout
 
 - name: Set the token from Service Account secret
   set_fact:
