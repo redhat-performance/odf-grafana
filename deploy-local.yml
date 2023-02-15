@@ -13,6 +13,8 @@
     grafana_namespace: 'N/A'
     grafana_service_account: 'N/A'
     token: 'N/A'
+  roles:
+    - common
   tasks:
     - name: Check prom_tarball is set 
       fail:

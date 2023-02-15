@@ -1,3 +1,7 @@
 dependencies:
   - oc
   - pwgen
+
+local_dependencies:
+  - podman-compose
+  - pwgen
