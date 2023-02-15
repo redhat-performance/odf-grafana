@@ -1,0 +1,42 @@
+---
+- name: Deploy Grafana and Prom Locally
+  hosts: localhost
+  gather_facts: False
+  vars: 
+    star_dashboards: yes
+    prom_tarball: ''
+    prom_dir: '/tmp/prometheus'
+    deploy_local: yes
+    grafana_route: http://localhost:3001
+    grafana_user: admin
+    grafana_password: admin 
+  tasks:
+    - name: Check prom_tarball is set 
+      fail:
+        msg: "You must set the prom_tarball variable - Hint: -e prom_tarball=<PATH TO PROMETHEUS TARBALL>"
+      when: prom_tarball | length == 0
+
+    - name: Extract {{ prom_tarball }} to {{ prom_dir }}
+      shell: mkdir -p {{ prom_dir }} && rm -rf {{prom_dir}}/* && tar -xf {{ prom_tarball }} -C {{ prom_dir }} && chmod -R 777 {{ prom_dir }}
+    
+    - name: Deploy docker images
+      command: podman-compose up -d
+
+    - name: Wait for Grafana to come online
+      pause:
+        seconds: 15
+
+    - name: Add datasource
+      community.grafana.grafana_datasource:
+        name: "Prometheus"
+        ds_type: "prometheus"
+        ds_url: "http://prom:9090"
+        grafana_url: "{{ grafana_route }}"
+        grafana_user: "{{ grafana_user }}"
+        grafana_password: "{{ grafana_password }}"
+    
+    - name: Add Dashboards
+      include_role:
+        name: dashboard
+    
+

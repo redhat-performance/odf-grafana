@@ -1,0 +1,19 @@
+services:
+  prom:
+    image: prom/prometheus
+    command: umask 0777
+    volumes:
+      - /tmp/prometheus:/prometheus:Z
+    networks:
+      - internal
+    ports:
+      - 8080:80
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - 3001:3000
+    networks:
+      - internal
+
+networks:
+  internal: {}

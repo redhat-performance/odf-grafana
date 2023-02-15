@@ -9,9 +9,19 @@
 - name: Load dashboard definition
   set_fact: 
     dashboard_content: "'{{ lookup('file', item) }}'"
+  when: not deploy_local
 
 - name: Define dashboard to Grafana
   command:
     cmd: oc -n {{ grafana_namespace }} apply -f - 
     stdin: "{{ lookup('template', 'dashboard.j2') }}"
+  when: not deploy_local
 
+- name: Define Dashboard to Local Grafana
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:3001
+    grafana_user: "admin"
+    grafana_password: "admin"
+    state: present
+    path: "{{ item }}"
+  when: deploy_local

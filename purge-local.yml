@@ -1,0 +1,12 @@
+---
+- name: Purge local Grafana
+  hosts: localhost
+  gather_facts: false
+  vars:
+    prom_dir: '/tmp/prometheus'
+  tasks:
+    - name: Delete containers
+      command: podman-compose down
+    
+    - name: Clean up directory
+      command: rm -rf {{ prom_dir }}
