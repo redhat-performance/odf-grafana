@@ -4,6 +4,7 @@
   gather_facts: False
   vars: 
     star_dashboards: yes
+    deploy_local: no
   roles:
     - common
     - prepare

@@ -8,8 +8,11 @@
     prom_dir: '/tmp/prometheus'
     deploy_local: yes
     grafana_route: http://localhost:3001
-    grafana_user: admin
-    grafana_password: admin 
+    grafana_user: grafana
+    prometheus_route: "http://prom:9090"
+    grafana_namespace: 'N/A'
+    grafana_service_account: 'N/A'
+    token: 'N/A'
   tasks:
     - name: Check prom_tarball is set 
       fail:
@@ -17,10 +20,14 @@
       when: prom_tarball | length == 0
 
     - name: Extract {{ prom_tarball }} to {{ prom_dir }}
-      shell: mkdir -p {{ prom_dir }} && rm -rf {{prom_dir}}/* && tar -xf {{ prom_tarball }} -C {{ prom_dir }} && chmod -R 777 {{ prom_dir }}
-    
+      shell: mkdir -p {{ prom_dir }} && rm -rf {{prom_dir}}/* && tar -xf {{ prom_tarball }} -C {{ prom_dir }} && chmod -R 0777 {{ prom_dir }}
+
+    - name: Create Grafana Credentials
+      include_role:
+        name: prepare
+
     - name: Deploy docker images
-      command: podman-compose up -d
+      shell: GRAFANA_PASSWD={{grafana_password}} podman-compose up -d
 
     - name: Wait for Grafana to come online
       pause:
@@ -30,7 +37,7 @@
       community.grafana.grafana_datasource:
         name: "Prometheus"
         ds_type: "prometheus"
-        ds_url: "http://prom:9090"
+        ds_url: "{{ prometheus_route }}"
         grafana_url: "{{ grafana_route }}"
         grafana_user: "{{ grafana_user }}"
         grafana_password: "{{ grafana_password }}"
@@ -38,5 +45,13 @@
     - name: Add Dashboards
       include_role:
         name: dashboard
+    
+    - name: Show deployment summary
+      pause:
+        seconds: 0
+        prompt: |
+          {{ lookup('ansible.builtin.template', 'roles/grafana/templates/summary.j2') }}
+ 
+
     
 

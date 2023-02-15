@@ -18,10 +18,11 @@
 - name: Fetch a list of namespaces
   command: oc get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
   register: namespaces
+  when: not deploy_local
 
 - name: Fail if the namespace '{{ grafana_namespace }}' already exists
   fail:
     msg: "Your chosen namespace {{ grafana_namespace }} is already defined"
-  when: grafana_namespace in namespaces.stdout_lines
+  when: not deploy_local and grafana_namespace in namespaces.stdout_lines
 
   
