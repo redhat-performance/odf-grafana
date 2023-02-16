@@ -32,8 +32,8 @@
       shell: GRAFANA_PASSWD={{grafana_password}} podman-compose up -d
 
     - name: Wait for Grafana to come online
-      pause:
-        seconds: 15
+      include_role:
+        name: grafana
 
     - name: Add datasource
       community.grafana.grafana_datasource:
