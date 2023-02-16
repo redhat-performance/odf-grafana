@@ -18,10 +18,18 @@
   when: not deploy_local
 
 - name: Define Dashboard to Local Grafana
-  community.grafana.grafana_dashboard:
-    grafana_url: http://localhost:3001
-    grafana_user: "{{ grafana_user }}"
-    grafana_password: "{{ grafana_password }}"
-    state: present
-    path: "{{ item }}"
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/dashboards/db"
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    body: >
+      {
+        "dashboard": {{ lookup('file', item) }},
+        "folderId": 0,
+        "overwrite": true
+      } 
   when: deploy_local

@@ -6,8 +6,6 @@ services:
       - /tmp/prometheus:/prometheus:Z
     networks:
       - internal
-    ports:
-      - 8080:80
 
   grafana:
     image: grafana/grafana-oss
