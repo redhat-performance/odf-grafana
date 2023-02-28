@@ -25,4 +25,8 @@
     msg: "Your chosen namespace {{ grafana_namespace }} is already defined"
   when: not deploy_local and grafana_namespace in namespaces.stdout_lines
 
+- name: Extract tarball for local deployment
+  include_tasks: extract_tarball.yml
+  when: deploy_local
+
   

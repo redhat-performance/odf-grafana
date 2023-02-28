@@ -15,39 +15,11 @@
     token: 'N/A'
   roles:
     - common
-  tasks:
-    - name: Check prom_tarball is set 
-      fail:
-        msg: "You must set the prom_tarball variable - Hint: -e prom_tarball=<PATH TO PROMETHEUS TARBALL>"
-      when: prom_tarball | length == 0
-
-    - name: Extract {{ prom_tarball }} to {{ prom_dir }}
-      shell: mkdir -p {{ prom_dir }} && rm -rf {{prom_dir}}/* && tar -xf {{ prom_tarball }} -C {{ prom_dir }} && chmod -R 0777 {{ prom_dir }}
-
-    - name: Create Grafana Credentials
-      include_role:
-        name: prepare
-
-    - name: Deploy docker images
-      shell: GRAFANA_PASSWD={{grafana_password}} podman-compose up -d
-
-    - name: Wait for Grafana to come online
-      include_role:
-        name: grafana
-
-    - name: Add datasource
-      community.grafana.grafana_datasource:
-        name: "Prometheus"
-        ds_type: "prometheus"
-        ds_url: "{{ prometheus_route }}"
-        grafana_url: "{{ grafana_route }}"
-        grafana_user: "{{ grafana_user }}"
-        grafana_password: "{{ grafana_password }}"
-    
-    - name: Add Dashboards
-      include_role:
-        name: dashboard
-    
+    - prepare
+    - local_deploy
+    - grafana
+    - dashboard
+  tasks: 
     - name: Show deployment summary
       pause:
         seconds: 0

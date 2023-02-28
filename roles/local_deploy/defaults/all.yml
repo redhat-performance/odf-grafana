@@ -1,0 +1,3 @@
+grafana_user: grafana
+prom_tag: 1.0.0
+# grafana_image_tag should be defined.. DOUBLE CHECK

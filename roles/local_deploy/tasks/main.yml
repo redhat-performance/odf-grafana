@@ -1,0 +1,3 @@
+---
+- name: Deploy docker images
+  shell: GRAFANA_PASSWD={{grafana_password}} PROM_DIR={{prom_dir}} podman-compose up -d
