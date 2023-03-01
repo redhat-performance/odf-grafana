@@ -33,7 +33,7 @@ Once you have these packages/binaries in place, download this repo to your machi
 | Filename | Purpose |
 |----------|---------|
 | deploy-local.yml | Creates a local deployment using a provided tarball of prometheus metrics (use `-e prom_tarball=<PATH TO TARBALL>`) |
-| purge-local.yml | Destroys a local deployment and deletes extracted files from tarball |
+| purge-local.yml | Destroys a local deployment and deletes extracted prometheus files |
 
 To obtain a prometheus tarball from an OpenShift Cluster, details can be found in [this article](https://access.redhat.com/solutions/5482971)
 
