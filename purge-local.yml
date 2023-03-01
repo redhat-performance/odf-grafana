@@ -2,11 +2,19 @@
 - name: Purge local Grafana
   hosts: localhost
   gather_facts: false
-  vars:
-    prom_dir: '/tmp/prometheus'
   tasks:
     - name: Delete containers
       command: podman-compose down
     
-    - name: Clean up directory
-      command: rm -rf {{ prom_dir }}
+    - name: Generate prom_dir
+      set_fact:
+        prom_path: "{{ lookup('env', 'HOME') }}/{{ prom_dir }}"
+    
+    - name: Confirm before deletion
+      pause:
+        prompt: Are you sure you want to delete files in '{{ prom_path }}' (yes/no) ?
+      register: confirm
+
+    - name: Remove data from {{ prom_path }}
+      shell: rm -rf {{ prom_path }}
+      when: confirm.user_input.upper() == "YES"

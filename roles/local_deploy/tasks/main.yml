@@ -1,3 +1,8 @@
 ---
+- name: Ensure {{ container_engine }} exists
+  package_facts:
+    manager: auto
+  failed_when: "'{{ container_engine }}' not in ansible_facts['ansible_facts']['packages']"
+
 - name: Deploy docker images
-  shell: GRAFANA_PASSWD={{grafana_password}} PROM_DIR={{prom_dir}} podman-compose up -d
+  shell: GRAFANA_PASSWD={{grafana_password}} PROM_DIR={{prom_path}} {{ container_engine }} up -d

@@ -1,28 +1,28 @@
 ---
+- name: Generate prom_path
+  set_fact:
+    prom_path: "{{ lookup('env', 'HOME') }}/{{prom_dir}}"
+
 - name: Check prom_tarball is set 
   fail:
     msg: "You must set the prom_tarball variable - Hint: -e prom_tarball=<PATH TO PROMETHEUS TARBALL>"
   when: prom_tarball | length == 0
 
-- name: Ensure {{ prom_dir }} exists
-  command: mkdir -p {{ prom_dir }}
+- name: Ensure {{ prom_path }} exists
+  command: mkdir -p {{ prom_path }}
 
 - name: Get size of Prometheus backup
   shell: gzip -l {{ prom_tarball }} | tail -n 1 | awk '{print $2}'
   register: prom_size
 
 - name: Get space left on destinaton device
-  shell: df -B1 {{ prom_dir }} | tail -n 1 | awk '{print $4}'
+  shell: df -B1 {{ prom_path }} | tail -n 1 | awk '{print $4}'
   register: drive_size
-
-- name: Output space
-  debug:
-    msg: "{{drive_size}}"
 
 - name: Check if sufficient space is available
   fail:
-    msg: "Insufficient space on device containing {{ prom_dir }}. Need {{ prom_size.stdout }}, found {{ drive_size.stdout }}"
+    msg: "Insufficient space on device containing {{ prom_path }}. Need {{ prom_size.stdout }}, found {{ drive_size.stdout }}"
   when: drive_size.stdout | int < prom_size.stdout | int
 
-- name: Extract {{ prom_tarball }} to {{ prom_dir }}
-  command: tar -xf {{ prom_tarball }} -C {{ prom_dir }}
+- name: Extract {{ prom_tarball }} to {{ prom_path }}
+  command: tar -xf {{ prom_tarball }} -C {{ prom_path }}

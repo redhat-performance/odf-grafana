@@ -41,3 +41,12 @@
 # but you can allso explicitly load a dashboard by full path using the following
 
 # dashboard_path: <full path to json file>
+
+################
+# Local deploy #
+################
+
+# Sets the path relative to the user's home to extract a prometheus tarball
+prom_dir: .prometheus
+# Sets the container engine to be used, podman-compose does not survive reboots
+container_engine: docker-compose

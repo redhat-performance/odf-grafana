@@ -5,7 +5,6 @@
   vars: 
     star_dashboards: yes
     prom_tarball: ''
-    prom_dir: '/tmp/prometheus'
     deploy_local: yes
     grafana_route: http://localhost:3001
     grafana_user: grafana
@@ -19,7 +18,7 @@
     - local_deploy
     - grafana
     - dashboard
-  tasks: 
+  tasks:
     - name: Show deployment summary
       pause:
         seconds: 0

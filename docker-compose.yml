@@ -1,7 +1,8 @@
 services:
   prom:
     image: prom/prometheus
-    user: "${UID}:${UID}"
+    user: ${UID}:${UID}
+    restart: always
     volumes:
       - ${PROM_DIR}:/prometheus:Z
     networks:
@@ -11,6 +12,7 @@ services:
 
   grafana:
     image: grafana/grafana-oss
+    restart: always
     environment:
       - GF_SECURITY_ADMIN_USER=grafana
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWD}
