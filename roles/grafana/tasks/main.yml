@@ -46,14 +46,23 @@
   delay: 5
   until: grafana_health.status == 200
 
-- name: Add datasource # TODO: Update this to HTTP call to minimize required roles
-  community.grafana.grafana_datasource:
-    name: "Prometheus"
-    ds_type: "prometheus"
-    ds_url: "{{ prometheus_route }}"
-    grafana_url: "{{ grafana_route }}"
-    grafana_user: "{{ grafana_user }}"
-    grafana_password: "{{ grafana_password }}"
+- name: Add datasource
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/datasources"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    body_format: json
+    body: >
+      {
+        "name": "Prometheus",
+        "type": "prometheus",
+        "url": "{{ prometheus_route }}",
+        "access": "proxy",
+        "basicAuth": false
+      }
   when: deploy_local
 
 - name: Record the grafana login credentials, locally
