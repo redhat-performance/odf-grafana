@@ -8,18 +8,26 @@
 
 - name: Fetch the token - method 1
   shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.data.token}' | base64 -d"
-  register: sa_secret
+  register: sa_secret_method_1
 
 - name: Fetch the token - method 2
   shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
-  register: sa_secret
-  when: not sa_secret.stdout
+  register: sa_secret_method_2
 
-- name: Set the token from Service Account secret
+- name: Set the token from Service Account secret from method 1
   set_fact:
-    token: "{{ sa_secret.stdout }}"
+    token: "{{ sa_secret_method_1.stdout }}"
   when:
     - secret_name.rc == 0
+    - sa_secret_method_1.stdout
+
+- name: Set the token from Service Account secret from method 2
+  set_fact:
+    token: "{{ sa_secret_method_2.stdout }}"
+  when:
+    - secret_name.rc == 0
+    - sa_secret_method_2.stdout
+    - not sa_secret_method_1.stdout
 
 - name: Show token
   debug:
@@ -29,7 +37,7 @@
   fail:
     msg: "Unable to get the token from the {{ grafana_service_account }} Service Account"
   when:
-    - secret_name.rc > 0 
+    - secret_name.rc > 0
 
 - name: Add Prometheus datasource to Grafana
   command:
