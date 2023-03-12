@@ -6,11 +6,13 @@
   until: pod_state.stdout == "Running"
   retries: 60
   delay: 5
+  when: not deploy_local
 
 - name: Deploying Grafana
   command:
     cmd: oc apply -f - 
     stdin: "{{ lookup('template', 'grafana.j2') }}"
+  when: not deploy_local
 
 - name: Wait up to 5m for the external route to appear
   command:
@@ -19,16 +21,17 @@
   retries: 60
   delay: 5
   until: route.rc == 0
+  when: not deploy_local
 
 - name: Parse the route output
   set_fact:
     route_json: "{{ route.stdout|from_json}}"
-  when: route.rc == 0
+  when: not deploy_local and route.rc == 0
 
 - name: Set the Grafana route URL
   set_fact:
     grafana_route: "https://{{ route_json.spec.host }}"
-  when: route.rc == 0
+  when: not deploy_local and route.rc == 0
 
 - name: Wait for Grafana to be accessible
   ansible.builtin.uri:
@@ -42,6 +45,25 @@
   retries: 60
   delay: 5
   until: grafana_health.status == 200
+
+- name: Add datasource
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/datasources"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    body_format: json
+    body: >
+      {
+        "name": "Prometheus",
+        "type": "prometheus",
+        "url": "{{ prometheus_route }}",
+        "access": "proxy",
+        "basicAuth": false
+      }
+  when: deploy_local
 
 - name: Record the grafana login credentials, locally
   ansible.builtin.template:

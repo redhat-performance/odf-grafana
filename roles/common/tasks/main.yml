@@ -7,18 +7,28 @@
   changed_when: result.rc > 0
   failed_when: result.rc > 0
   with_items: "{{ dependencies }}"
+  when: not deploy_local
+
+- name: Check required packages are installed
+  command: "which {{ item }} "
+  register: result
+  changed_when: result.rc > 0
+  failed_when: result.rc > 0
+  with_items: "{{ local_dependencies }}"
+  when: deploy_local
 
 - name: Check logged in state
   command: oc status
   ignore_errors: yes
   register: oc_status
+  when: not deploy_local
 
 - name: fail if not logged in
   fail:
     msg: Not logged in! You need to be logged in to run the playbook
-  when: oc_status.rc > 0
+  when: not deploy_local and oc_status.rc > 0
 
 - name: Fail of the grafana_namespace variable is not set
   fail:
     msg: You must set grafana_namespace in either all.yml or use -e grafana_namespace=<wah> at execution time
-  when: grafana_namespace is not defined
+  when: not deploy_local and grafana_namespace is not defined

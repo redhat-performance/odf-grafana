@@ -1,16 +1,22 @@
 ---
-- name: Deploy Grafana
+- name: Deploy Grafana and Prom Locally
   hosts: localhost
   gather_facts: False
   vars: 
     star_dashboards: yes
-    deploy_local: no
+    deploy_local: yes
+    prom_tarball: ''
+    grafana_route: http://localhost:3001
+    grafana_user: grafana
+    prometheus_route: "http://prom:9090"
+    grafana_namespace: 'N/A'
+    grafana_service_account: 'N/A'
+    token: 'N/A'
   roles:
     - common
     - prepare
-    - operator
+    - local_deploy
     - grafana
-    - datasource
     - dashboard
   tasks:
     - name: Show deployment summary
@@ -18,4 +24,3 @@
         seconds: 0
         prompt: |
           {{ lookup('ansible.builtin.template', 'roles/grafana/templates/summary.j2') }}
- 

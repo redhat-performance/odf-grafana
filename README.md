@@ -6,6 +6,7 @@ This project uses Ansible, and the community grafana operator to create a dedica
 ## Installation
 before you start you'll need to satisfy the dependencies.
 
+### OpenShift Deployment
 you will need;  
 * ansible
 * oc (*binaries are [here](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)*)
@@ -17,8 +18,24 @@ Once you have these packages/binaries in place, download this repo to your machi
 |----------|---------|
 | deploy-grafana.yml | creates a new namespace and deploys Grafana with default dashboards|
 | add-dashboard.yml | Load a dashboard to an existing Grafana deployment |
-| purge-grafana.yml | deletes your grafana namespace (sledgehammer!)
+| purge-grafana.yml | deletes your grafana namespace (sledgehammer!) |
 
+### Local Deployment
+Requirements:
+* ansible
+* pwgen
+* docker
+* docker-compose
+
+Podman and podman-compose can be used instead of their docker equivalents, but the containers will not survive a reboot.
+
+Once you have these packages/binaries in place, download this repo to your machine. The repo provides the following playbooks
+| Filename | Purpose |
+|----------|---------|
+| deploy-local.yml | Creates a local deployment using a provided tarball of prometheus metrics (use `-e prom_tarball=<PATH TO TARBALL>`) |
+| purge-local.yml | Destroys a local deployment and deletes extracted prometheus files |
+
+To obtain a prometheus tarball from an OpenShift Cluster, details can be found in [this article](https://access.redhat.com/solutions/5482971)
 
 ## Usage
 The `group_vars/all.yml` file defines a number of parameters that can be used to tweak a deployment, but normally you should need to change anything.

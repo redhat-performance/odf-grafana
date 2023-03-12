@@ -1,0 +1,2 @@
+grafana_user: grafana
+prom_image_tag: 2.39.1

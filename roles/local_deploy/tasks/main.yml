@@ -1,0 +1,12 @@
+---
+- name: Ensure {{ container_engine }} exists
+  package_facts:
+    manager: auto
+  failed_when: "'{{ container_engine }}' not in ansible_facts['ansible_facts']['packages']"
+
+- name: Get userid
+  shell: echo $UID
+  register: uid
+
+- name: Deploy docker images
+  shell: CUID={{uid.stdout}} GRAFANA_PASSWD={{grafana_password}} PROM_DIR={{prom_path}} PROM_IMAGE_TAG={{prom_image_tag}} GRAFANA_IMAGE_TAG={{grafana_image_tag}} {{ container_engine }} up -d

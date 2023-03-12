@@ -9,9 +9,27 @@
 - name: Load dashboard definition
   set_fact: 
     dashboard_content: "'{{ lookup('file', item) }}'"
+  when: not deploy_local
 
 - name: Define dashboard to Grafana
   command:
     cmd: oc -n {{ grafana_namespace }} apply -f - 
     stdin: "{{ lookup('template', 'dashboard.j2') }}"
+  when: not deploy_local
 
+- name: Define Dashboard to Local Grafana
+  ansible.builtin.uri:
+    url: "{{ grafana_route }}/api/dashboards/db"
+    user: "{{ grafana_user }}"
+    password: "{{ grafana_password }}"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    body: >
+      {
+        "dashboard": {{ lookup('file', item) }},
+        "folderId": 0,
+        "overwrite": true
+      } 
+  when: deploy_local
