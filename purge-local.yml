@@ -1,20 +1,40 @@
 ---
-- name: Purge local Grafana
+- name: Confirm before deleting the Grafana/Prometheus environment
   hosts: localhost
   gather_facts: false
-  tasks:
-    - name: Delete containers
-      command: podman-compose down
-    
-    - name: Generate prom_dir
-      set_fact:
-        prom_path: "{{ lookup('env', 'HOME') }}/{{ prom_dir }}"
-    
-    - name: Confirm before deletion
-      pause:
-        prompt: Are you sure you want to delete files in '{{ prom_path }}' (yes/no) ?
-      register: confirm
+  become: false
+  vars:
+    deploy_local: true
 
-    - name: Remove data from {{ prom_path }}
-      shell: rm -rf {{ prom_path }}
-      when: confirm.user_input.upper() == "YES"
+  vars_prompt:
+    - name: confirm_delete
+      prompt: |
+
+        Are you sure you want to stop the containers and delete all the prometheus data?
+      default: 'no'
+      private: no
+
+  tasks:
+    - name: User cancelled purge process
+      ansible.builtin.meta: end_play
+      when: confirm_delete != 'yes'
+
+    - name: Purge the environment
+      block:
+        - name: import common
+          ansible.builtin.include_role:
+            name: common
+            public: true
+
+        - name: Generate prom_dir path
+          set_fact:
+            prom_path: "{{ lookup('env', 'HOME') }}/{{ prom_dir }}"
+
+        - name: Delete containers
+          command: "{{ container_engine }} down"
+
+        - name: Remove data from {{ prom_path }}
+          shell: rm -rf {{ prom_path }}
+      when: confirm_delete == 'yes'
+
+
