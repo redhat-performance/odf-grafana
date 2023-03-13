@@ -1,6 +1,6 @@
 services:
-  prom:
-    image: prom/prometheus:v${PROM_IMAGE_TAG}
+  local-prometheus:
+    image: docker.io/prom/prometheus:v${PROMETHEUS_IMAGE_TAG}
     user: ${CUID}:${CUID}
     restart: always
     volumes:
@@ -11,7 +11,7 @@ services:
       - 9100:9090
 
   grafana:
-    image: grafana/grafana-oss:${GRAFANA_IMAGE_TAG}
+    image: docker.io/grafana/grafana:${GRAFANA_IMAGE_TAG}
     restart: always
     environment:
       - GF_SECURITY_ADMIN_USER=grafana
