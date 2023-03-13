@@ -3,16 +3,22 @@ Deployment Summary
 ------------------
 
 Grafana Details
-  Namespace : {{ grafana_namespace }}
   User      : {{ grafana_user }}
   Password  : {{ grafana_password }}
   Login URL : {{ grafana_route }}
+{% if not deploy_local %}
+  Namespace : {{ grafana_namespace }}
+{% else %}
+         or : {{ local_grafana_fqdn }}
+{% endif %}
+  
 
+{% if not deploy_local %}
 Prometheus Datasource Connectivity
-  Monitoring namespace : openshift-monitoring
+  Monitoring namespace : {{ openshift_monitoring_namespace }}
   Prometheus URL       : {{ prometheus_route }}
   Service Account Used : {{ grafana_service_account }}
   Token used           : {{ token }}
-
+{% endif %}
 
 
