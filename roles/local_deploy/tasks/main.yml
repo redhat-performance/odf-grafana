@@ -22,3 +22,7 @@
 - name: Set local_grafana_fqdn
   set_fact:
     local_grafana_fqdn: "http://{{ hostname.stdout }}:{{ grafana_port }}"
+
+- name: Fetch the TSDB time ranges
+  shell: podman exec -it odf-grafana_local-prometheus_1 promtool tsdb list -r /prometheus
+  register: tsdb_info
