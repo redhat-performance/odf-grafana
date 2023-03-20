@@ -1,5 +1,5 @@
 ---
-- name: Wait for up to 5m for the Grafana operator to be available
+- name: Wait for up to 10m for the Grafana operator to be available
   command:
     cmd: oc -n {{ grafana_namespace }} get pod --selector=control-plane=controller-manager -o jsonpath='{.items[0].status.phase}'
   register: pod_state
@@ -14,7 +14,7 @@
     stdin: "{{ lookup('template', 'grafana.j2') }}"
   when: not deploy_local
 
-- name: Wait up to 5m for the external route to appear
+- name: Wait up to 10m for the external route to appear
   command:
     cmd: oc -n {{ grafana_namespace }} get route/grafana-route -o json
   register: route
@@ -33,7 +33,7 @@
     grafana_route: "https://{{ route_json.spec.host }}"
   when: not deploy_local and route.rc == 0
 
-- name: Wait for Grafana to be accessible
+- name: Wait for up to 10m for Grafana to be accessible
   ansible.builtin.uri:
     url: "{{ grafana_route }}/api/health"
     user: "{{ grafana_user }}"
