@@ -6878,7 +6878,7 @@
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
-        "regex": "ceph version (.*).el8cp.*",
+        "regex": "ceph\\ version\\ (\\d+\\.\\d+\\.\\d+).*",
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
