@@ -1,12 +1,25 @@
 ---
 - name: Generate prom_path
   set_fact:
-    prom_path: "{{ lookup('env', 'HOME') }}/{{prom_dir}}"
+    prom_path: "{{ lookup('env', 'HOME') }}/{{ prom_dir }}"
 
-- name: Check prom_tarball is set 
+- name: Check prom_tarball variable is set 
   fail:
     msg: "You must set the prom_tarball variable - Hint: -e prom_tarball=<PATH TO PROMETHEUS TARBALL>"
-  when: prom_tarball | length == 0
+  when: 
+    - prom_tarball is not defined
+
+- name: Try to stat {{ prom_tarball }}
+  ansible.builtin.stat: 
+    path: "{{ prom_tarball }}"
+    get_checksum: false
+  register: tarball
+
+- name: Fail of {{ prom_tarball }} is not found
+  fail:
+    msg: "Unable to find {{ prom_tarball }}"
+  when:
+    - not tarball.stat.exists | bool
 
 - name: Ensure {{ prom_path }} exists
   command: mkdir -p {{ prom_path }}
@@ -24,5 +37,5 @@
     msg: "Insufficient space on device containing {{ prom_path }}. Need {{ prom_size.stdout }}, found {{ drive_size.stdout }}"
   when: drive_size.stdout | int < prom_size.stdout | int
 
-- name: Extract {{ prom_tarball }} to {{ prom_path }}
+- name: Extract {{ prom_tarball }} to {{ prom_path }} (this may take some time!)
   command: tar -xf {{ prom_tarball }} -C {{ prom_path }}

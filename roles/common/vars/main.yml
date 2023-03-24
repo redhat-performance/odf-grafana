@@ -3,5 +3,4 @@ dependencies:
   - pwgen
 
 local_dependencies:
-  - podman-compose
   - pwgen

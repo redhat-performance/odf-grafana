@@ -1,2 +1,7 @@
+openshift_monitoring_namespace: openshift-monitoring
 grafana_namespace: perfscale
+local_grafana_fqdn: ''
 prometheus_route: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
+star_dashboards: yes
+deploy_local: false
+prom_dir: .prometheus

@@ -1,2 +1,9 @@
-grafana_user: grafana
-prom_image_tag: 2.39.1
+deploy_local: yes
+container_engine: docker-compose
+grafana_port: 3001
+grafana_namespace: 'N/A'
+grafana_service_account: 'N/A'
+
+prometheus_image_tag: 2.39.1
+prometheus_route: http://local-prometheus:9090
+token: 'N/A'

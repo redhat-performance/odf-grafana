@@ -37,6 +37,10 @@
 ##############
 # Dashboards #
 ##############
+
+# Star the dashboards loaded to make them quicker to find
+# star_dashboards: yes
+
 # normally loading dashboard is done by iterating over the roles/dashboard/files directory
 # but you can allso explicitly load a dashboard by full path using the following
 
@@ -47,6 +51,8 @@
 ################
 
 # Sets the path relative to the user's home to extract a prometheus tarball
-prom_dir: .prometheus
-# Sets the container engine to be used, podman-compose does not survive reboots
-container_engine: docker-compose
+# prom_dir: .prometheus
+
+# Sets the container engine to be used, either podman-compose or docker-compose.
+# NB. using podman-compose will not restart the environment following a reboot
+# container_engine: docker-compose

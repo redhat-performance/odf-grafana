@@ -1,17 +1,9 @@
 ---
-- name: Deploy Grafana and Prom Locally
+- name: Deploy Grafana and Prometheus Locally
   hosts: localhost
-  gather_facts: False
+  gather_facts: false
   vars: 
-    star_dashboards: yes
     deploy_local: yes
-    prom_tarball: ''
-    grafana_route: http://localhost:3001
-    grafana_user: grafana
-    prometheus_route: "http://prom:9090"
-    grafana_namespace: 'N/A'
-    grafana_service_account: 'N/A'
-    token: 'N/A'
   roles:
     - common
     - prepare

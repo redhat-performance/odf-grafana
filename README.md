@@ -1,18 +1,27 @@
 # odf-grafana
 Playbook and dashboards to help with ODF performance analysis.  
 
-This project uses Ansible, and the community grafana operator to create a dedicated Grafana instance connected to Openshift's prometheus instance. The playbook also loads any available dashboards from this project into the Grafana instance, so you don't have to start from scratch!
+This project uses Ansible to deploy a Grafana environment to support performance analysis of ODF. There are two deployment modes supported;  
 
-## Installation
-before you start you'll need to satisfy the dependencies.
+* **OpenShift**: This mode will use the community grafana operator to deploy Grafana directly into a specific namespace in [OpenShift](https://www.redhat.com/en/technologies/cloud-computing/openshift).
+* **Local**: In local mode, the deployment expects a prometheus archive file (tar.gz) and will deploy a local Prometheus and Grafana instance to allow offline analysis of the Prometheus data. 
+
+## Requirements
+Before you start you'll need to ensure you have the following packages installed.
+
+| Package | Notes |
+|---------|-------|
+| ansible | |
+| pwgen   | |
+| oc<sup>*</sup> | required for **OpenShift** deployment mode ONLY |
+| docker or podman | required for **local** deployment ONLY |
+| docker-compose or podman-compose | required for **local** deployment ONLY |
+
+\* the ```oc``` binary can be downloaded from [here](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)
+## Playbook Overview
 
 ### OpenShift Deployment
-you will need;  
-* ansible
-* oc (*binaries are [here](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)*)
-* pwgen
 
-Once you have these packages/binaries in place, download this repo to your machine. The repo provides the following playbooks
 
 | Filename | Purpose |
 |----------|---------|
@@ -21,30 +30,31 @@ Once you have these packages/binaries in place, download this repo to your machi
 | purge-grafana.yml | deletes your grafana namespace (sledgehammer!) |
 
 ### Local Deployment
-Requirements:
-* ansible
-* pwgen
-* docker
-* docker-compose
 
-Podman and podman-compose can be used instead of their docker equivalents, but the containers will not survive a reboot.
+By default, the playbook uses docker (```docker-compose```) to create a local Prometheus and Grafana environment. If you plan on using the podman equivalents, you'll need to update the ```container_engine``` variable, prior to attempting a deployment.
 
-Once you have these packages/binaries in place, download this repo to your machine. The repo provides the following playbooks
+Also note, that podman based containers will not automatically restart following a reboot.
+
 | Filename | Purpose |
 |----------|---------|
-| deploy-local.yml | Creates a local deployment using a provided tarball of prometheus metrics (use `-e prom_tarball=<PATH TO TARBALL>`) |
+| deploy-local.yml | Creates a local Grafana and Prometheus deployment using a provided tarball of prometheus metrics (use `-e prom_tarball=<PATH TO TARBALL>`) |
 | purge-local.yml | Destroys a local deployment and deletes extracted prometheus files |
 
-To obtain a prometheus tarball from an OpenShift Cluster, details can be found in [this article](https://access.redhat.com/solutions/5482971)
+As mentioned above, local mode requires a Prometheus archive file as input. If you're unfamilar with creating an extract of a Prometheus TSDB, tak a look at the following [Red Hat article](https://access.redhat.com/solutions/5482971).
 
-## Usage
-The `group_vars/all.yml` file defines a number of parameters that can be used to tweak a deployment, but normally you should need to change anything.
+## Tweaking the Deployment
+The `group_vars/all.yml` file defines a number of parameters that can be used to adapt a deployment, so it's worthwhile taking a look to see if there is anything that you need to change prior to attempting to deploy. 
 
+Normally, the defaults are fine for most purposes. However, if you need to deploy to a resource constrained OpenShift cluster, you'll find a section in ```all.yml``` called *"Resource Limits"* which contains some defaults for cpu and memory that have
+been confirmed to work in smaller OCP environments.
 
+## Using the Playbooks
 ### Deploying Grafana
 Run the deploy-grafana.yml playbook
 ```
 # ansible-playbook deploy-grafana.yml
+OR
+# ansible-playbook deploy-local.yml
 ```
 In less than a minute you'll have a functional Grafana instance :smile:  
 At the end of the run you'll see a summary of the settings defined for the Grafana instance.
@@ -74,22 +84,17 @@ Use the grafana information to login to your instance and get started! The scree
 
 ![grafana UI](assets/grafana-dashboard.gif)
 
-#### Resource Requirements
-The grafana operator supports tuning the resources allocated to the grafana pod. The
-defaults are normally fine (1/2 core and 1GB of memory), but if your pod is in a pending
-state due to resources, you can specify reduced requirements by updating your `all.yml`
-file. The *"Resource Limits"* section contains some defaults for cpu and memory that have
-been confirmed to work in smaller OCP environments.
-
 ### Removing the Grafana deployment
 
-Once your done with your grafana instance either delete the namespace manually to tidy things up or run the purge playbook.
+Once your done with your grafana instance, run the appropriate *purge* playbook to tify things up.
 
 ```
 # ansible-playbook purge-grafana.yml -e grafana-namespace=mygrafana
+OR 
+# ansible-playbook purge-local.yml
 ```
 
-NB. When you remove your grafana configuration, remember to use `oc project default` to switch you local CLI from the old project.
+NB. When you're removing you OpenShift based deployment, remember to use `oc project default` to ensure you're not in the odf-grafana namesspace.
 
 ### Adding a dashboard
 
@@ -98,10 +103,12 @@ If you need to add dashboards to your instance after a deployment, you can use t
 ```
 # ansible-playbook add-dashboard.yml -e dashboard_path=<insert your path here>
 ```
-NB. For the dashboard to work, it must define it's datasource as $datasource. This is a simple way to make your dashboards portable.
+Notes. 
+1. For the dashboard to work correctly, each panel **must** use a datasource of ```$datasource```. This is a simple way to make your dashboards portable.
+2. To add a dashboard to a local deployment add ```-e deploy_local=True``` to the playbook command. 
 
 
-### Adding a datasource (needs further testing!)
+### Adding a datasource (OpenShift Deployment ONLY)
 If you need to attach your grafana instance to a secondary cluster's prometheus instance, you can use the `add-datasource.yml` playbook. To
 set this up correctly you will need to set the following variables in `group_vars/all.yml'
 

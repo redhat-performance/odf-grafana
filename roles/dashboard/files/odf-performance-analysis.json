@@ -5032,7 +5032,7 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "node_network_speed_bytes{instance=\"$worker\",device=~\"(eno|eth|ens).*\"} * on(instance,device) node_network_info{operstate=\"up\"}",
+              "expr": "node_network_speed_bytes{instance=\"$worker\",device=~\"(eth|en).*\"} * on(instance,device) node_network_info{operstate=\"up\"}",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -5046,7 +5046,7 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "node_network_mtu_bytes{instance=\"$worker\",device=~\"(eno|eth|ens).*\"} * on(instance,device) node_network_info{operstate=\"up\"}",
+              "expr": "node_network_mtu_bytes{instance=\"$worker\",device=~\"(eth|en).*\"} * on(instance,device) node_network_info{operstate=\"up\"}",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -6878,7 +6878,7 @@
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
-        "regex": "ceph version (.*).el8cp.*",
+        "regex": "ceph\\ version\\ (\\d+\\.\\d+\\.\\d+).*",
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
