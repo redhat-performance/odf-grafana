@@ -1,5 +1,5 @@
 deploy_local: yes
-container_engine: docker-compose
+container_engine: podman-compose
 grafana_port: 3001
 grafana_namespace: 'N/A'
 grafana_service_account: 'N/A'
