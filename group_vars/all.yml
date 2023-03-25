@@ -55,4 +55,4 @@
 
 # Sets the container engine to be used, either podman-compose or docker-compose.
 # NB. using podman-compose will not restart the environment following a reboot
-# container_engine: docker-compose
+# container_engine: podman-compose
