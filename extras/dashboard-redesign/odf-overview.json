@@ -435,6 +435,13 @@
         "y": 7
       },
       "id": 10,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Show Host Performance",
+          "url": "d/Kv-XLbBVk/host-information"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "area",
@@ -499,6 +506,13 @@
         "y": 7
       },
       "id": 12,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Show OSD and Physical Disk performance",
+          "url": "d/MN-rwxf4z/ceph-osd-performance"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "area",
@@ -779,7 +793,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 9,
         "x": 12,
         "y": 7
@@ -856,6 +870,13 @@
         "y": 11
       },
       "id": 32,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Show Capacity Usage Details",
+          "url": "d/XSJ12FBVk/ceph-capacity-analysis"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "area",
@@ -1001,6 +1022,13 @@
         "y": 11
       },
       "id": 34,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Placement Group Details",
+          "url": "d/8rySPxf4k/ceph-placement-groups"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "none",
@@ -1066,6 +1094,13 @@
         "y": 11
       },
       "id": 49,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Show OSD Configuration Information",
+          "url": "d/wt3g3bfVk/osd-configuration-details"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "none",
@@ -1140,111 +1175,6 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "binBps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 9,
-        "x": 12,
-        "y": 14
-      },
-      "id": 8,
-      "links": [
-        {
-          "title": "Show Pool Level Performance",
-          "url": "d/33iq3HfVz/ceph-pool-details"
-        }
-      ],
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.0.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "(rate(ceph_pool_rd_bytes[65s]) + rate(ceph_pool_wr_bytes[65s])) * on(pool_id) group_left(name) (ceph_pool_metadata)",
-          "legendFormat": "{{name}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Cluster Throughput by Pool",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
             "mode": "thresholds"
           },
           "mappings": [],
@@ -1268,6 +1198,13 @@
         "y": 15
       },
       "id": 18,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Show Pool Level Performance",
+          "url": "d/33iq3HfVz/ceph-pool-details"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "area",
@@ -1401,6 +1338,13 @@
         "y": 15
       },
       "id": 43,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "PV Performance",
+          "url": "d/FqoMjbBVz/client-performance"
+        }
+      ],
       "options": {
         "colorMode": "none",
         "graphMode": "none",
@@ -1540,7 +1484,7 @@
       },
       "id": 53,
       "options": {
-        "colorMode": "background",
+        "colorMode": "none",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1563,7 +1507,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "vector(0)",
+          "expr": "count(ceph_rbd_mirror_metadata) or vector(0)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1641,12 +1585,185 @@
     {
       "datasource": {
         "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 12,
+        "y": 15
+      },
+      "id": 8,
+      "links": [
+        {
+          "title": "Show Pool Level Performance",
+          "url": "d/33iq3HfVz/ceph-pool-details"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.0.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(rate(ceph_pool_rd_bytes[65s]) + rate(ceph_pool_wr_bytes[65s])) * on(pool_id) group_left(name) (ceph_pool_metadata)",
+          "legendFormat": "{{name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Cluster Throughput by Pool",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 0,
+        "y": 19
+      },
+      "id": 55,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "count by(node) (kube_node_role{role=~\"(worker|infra)\"})",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "ODF Workers",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
         "uid": "P1809F7CD0C75ACF3"
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 2,
-        "x": 0,
+        "x": 2,
         "y": 19
       },
       "id": 42,
@@ -1693,9 +1810,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 2,
-        "x": 2,
+        "x": 4,
         "y": 19
       },
       "id": 38,
@@ -1768,9 +1885,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 2,
-        "x": 4,
+        "x": 6,
         "y": 19
       },
       "id": 51,
@@ -1843,9 +1960,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 2,
-        "x": 6,
+        "x": 8,
         "y": 19
       },
       "id": 52,
@@ -1913,33 +2030,6 @@
       {
         "current": {
           "selected": false,
-          "text": "crc-9ltqk-master-0",
-          "value": "crc-9ltqk-master-0"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values(kube_node_role{role=~'(worker|infra)'}, node)",
-        "hide": 0,
-        "includeAll": false,
-        "label": "Worker",
-        "multi": false,
-        "name": "worker",
-        "options": [],
-        "query": {
-          "query": "label_values(kube_node_role{role=~'(worker|infra)'}, node)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
           "text": "prometheus",
           "value": "prometheus"
         },
@@ -1953,60 +2043,6 @@
         "regex": "",
         "skipUrlSync": false,
         "type": "datasource"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "rbd0",
-          "value": "rbd0"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values(node_disk_read_bytes_total{instance=~\"$worker.*\", device=~\"rbd.*\"}, device)",
-        "hide": 0,
-        "includeAll": false,
-        "label": "rbd Device",
-        "multi": false,
-        "name": "rbd_device",
-        "options": [],
-        "query": {
-          "query": "label_values(node_disk_read_bytes_total{instance=~\"$worker.*\", device=~\"rbd.*\"}, device)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "fio-pvc",
-          "value": "fio-pvc"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values(kube_persistentvolumeclaim_info{storageclass=~\"ocs-storagecluster.*\"},persistentvolumeclaim)",
-        "hide": 0,
-        "includeAll": false,
-        "label": "ODF PVC name",
-        "multi": false,
-        "name": "pvc",
-        "options": [],
-        "query": {
-          "query": "label_values(kube_persistentvolumeclaim_info{storageclass=~\"ocs-storagecluster.*\"},persistentvolumeclaim)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       },
       {
         "current": {
@@ -2085,6 +2121,6 @@
   "timezone": "",
   "title": "ODF Overview",
   "uid": "0dALQNB4z",
-  "version": 26,
+  "version": 37,
   "weekStart": ""
 }
