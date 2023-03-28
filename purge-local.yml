@@ -17,7 +17,7 @@
   tasks:
     - name: User cancelled purge process
       ansible.builtin.meta: end_play
-      when: confirm_delete != 'yes'
+      when: not ( confirm_delete | bool )
 
     - name: Purge the environment
       block:
@@ -30,11 +30,16 @@
           set_fact:
             prom_path: "{{ lookup('env', 'HOME') }}/{{ prom_dir }}"
 
-        - name: Delete containers
-          command: "{{ container_engine }} down"
+        - name: Delete containers (docker)
+          command: "{{ container_engine }}-compose down"
+          when: container_engine == "docker"
+
+        - name: Delete the containers (podman)
+          shell: podman pod stop perfscale && podman pod rm perfscale
+          when: container_engine == "podman"
 
         - name: Remove data from {{ prom_path }}
           shell: rm -rf {{ prom_path }}
-      when: confirm_delete == 'yes'
+      when: confirm_delete | bool 
 
 
