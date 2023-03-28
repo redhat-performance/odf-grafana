@@ -1,6 +1,7 @@
 services:
   local-prometheus:
     image: docker.io/prom/prometheus:v${PROMETHEUS_IMAGE_TAG}
+    container_name: local_prometheus
     user: ${CUID}:${CUID}
     restart: always
     volumes:
@@ -12,6 +13,9 @@ services:
 
   grafana:
     image: docker.io/grafana/grafana:${GRAFANA_IMAGE_TAG}
+    container_name: local_grafana
+    depends_on:
+      - local-prometheus
     restart: always
     environment:
       - GF_SECURITY_ADMIN_USER=grafana
