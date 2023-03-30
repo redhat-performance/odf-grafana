@@ -30,6 +30,11 @@
         msg: Aborted the namespace delete
       when: confirm.user_input.upper() != 'YES'
     
+    - name: Switch to default namespace before deleting '{{ grafana_namespace }}'
+      command:
+        cmd: oc project default
+      when: confirm.user_input.upper() == 'YES'
+    
     - name: Deleting the namespace
       command:
         cmd: oc delete ns {{ grafana_namespace }}
