@@ -94,8 +94,6 @@ OR
 # ansible-playbook purge-local.yml
 ```
 
-NB. When you're removing you OpenShift based deployment, remember to use `oc project default` to ensure you're not in the odf-grafana namesspace.
-
 ### Adding a dashboard
 
 If you need to add dashboards to your instance after a deployment, you can use the `add-dashboard.yml` playbook and specify the path to the dashboard file either from the all.yml file or as an extra-vars on the playbook command line.
