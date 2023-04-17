@@ -4,4 +4,5 @@ local_grafana_fqdn: ''
 prometheus_route: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
 star_dashboards: yes
 deploy_local: false
+container_engine: podman
 prom_dir: .prometheus

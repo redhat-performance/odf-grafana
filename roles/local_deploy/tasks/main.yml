@@ -1,19 +1,33 @@
 ---
 - name: set local grafana route
   set_fact:
-    grafana_route: "http://localhost:{{ grafana_port}}"
+    grafana_route: "http://localhost:{{ grafana_port }}"
 
-- name: Ensure {{ container_engine }} is installed
-  ansible.builtin.package:
-    name: "{{ container_engine }}"
-    state: present
- 
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Fail if container engine requirements are not met
+  fail:
+    msg: "Package {{ item }}  missing for container_engine {{ container_engine }} deployment"
+  when: item not in ansible_facts.packages
+  with_items: "{{ container_engine_reqs[container_engine] }}"
+
 - name: Get userid
   shell: echo $UID
   register: uid
 
-- name: Deploy docker images
-  shell: CUID={{uid.stdout}} GRAFANA_PASSWD={{grafana_password}} PROM_DIR={{prom_path}} PROMETHEUS_IMAGE_TAG={{prometheus_image_tag}} GRAFANA_IMAGE_TAG={{grafana_image_tag}} {{ container_engine }} up -d
+- name: Deploy containers via docker-compose
+  shell: CUID={{ uid.stdout }} GRAFANA_PASSWD={{ grafana_password }} PROM_DIR={{ prom_path }} PROMETHEUS_IMAGE_TAG={{ prometheus_image_tag }} GRAFANA_IMAGE_TAG={{ grafana_image_tag }} docker-compose up -d
+  when: container_engine == "docker"
+
+- name: Deploy containers via podman - Prometheus
+  shell: podman run -d --pod new:perfscale -p 9100:9090 -p {{ grafana_port }}:3000 --user {{ uid.stdout }}:{{ uid.stdout }} --userns=keep-id -v {{ prom_path }}:/prometheus --name local-prometheus docker.io/prom/prometheus:v{{ prometheus_image_tag }}
+  when: container_engine == "podman"
+
+- name: Deploy containers via podman - Grafana
+  shell: podman run -d --pod perfscale -e GF_SECURITY_ADMIN_USER=grafana -e GF_SECURITY_ADMIN_PASSWORD={{ grafana_password }} --name local-grafana docker.io/grafana/grafana:{{ grafana_image_tag }}
+  when: container_engine == "podman"
 
 - name: Get FQDN of the host
   ansible.builtin.command: hostname
@@ -24,5 +38,5 @@
     local_grafana_fqdn: "http://{{ hostname.stdout }}:{{ grafana_port }}"
 
 - name: Fetch the TSDB time ranges
-  shell: podman exec -it odf-grafana_local-prometheus_1 promtool tsdb list -r /prometheus
+  shell: "{{ container_engine }} exec -it local-prometheus promtool tsdb list -r /prometheus"
   register: tsdb_info

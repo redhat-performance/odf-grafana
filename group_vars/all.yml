@@ -53,6 +53,7 @@
 # Sets the path relative to the user's home to extract a prometheus tarball
 # prom_dir: .prometheus
 
-# Sets the container engine to be used, either podman-compose or docker-compose.
-# NB. using podman-compose will not restart the environment following a reboot
-# container_engine: podman-compose
+# Sets the container engine to be used, either podman(default) or docker. The playbook will 
+# use a podman pod by default, but if you want to use docker and docker-compose, change the 
+# container_engine setting below to 'docker'
+# container_engine: podman
