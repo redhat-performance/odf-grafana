@@ -1,41 +1,40 @@
 ---
 - name: Generate prom_path
-  set_fact:
+  ansible.builtin.set_fact:
     prom_path: "{{ lookup('env', 'HOME') }}/{{ prom_dir }}"
 
-- name: Check prom_tarball variable is set 
-  fail:
+- name: Check prom_tarball variable is set
+  ansible.builtin.fail:
     msg: "You must set the prom_tarball variable - Hint: -e prom_tarball=<PATH TO PROMETHEUS TARBALL>"
-  when: 
+  when:
     - prom_tarball is not defined
 
 - name: Try to stat {{ prom_tarball }}
-  ansible.builtin.stat: 
+  ansible.builtin.stat:
     path: "{{ prom_tarball }}"
     get_checksum: false
   register: tarball
 
 - name: Fail of {{ prom_tarball }} is not found
-  fail:
-    msg: "Unable to find {{ prom_tarball }}"
+  ansible.builtin.fail:
+    msg: Unable to find {{ prom_tarball }}
   when:
     - not tarball.stat.exists | bool
 
 - name: Ensure {{ prom_path }} exists
-  command: mkdir -p {{ prom_path }}
-
+  ansible.builtin.command: mkdir -p {{ prom_path }}
 - name: Get size of Prometheus backup
-  shell: gzip -l {{ prom_tarball }} | tail -n 1 | awk '{print $2}'
+  ansible.builtin.shell: gzip -l {{ prom_tarball }} | tail -n 1 | awk '{print $2}'
   register: prom_size
 
 - name: Get space left on destinaton device
-  shell: df -B1 {{ prom_path }} | tail -n 1 | awk '{print $4}'
+  ansible.builtin.shell: df -B1 {{ prom_path }} | tail -n 1 | awk '{print $4}'
   register: drive_size
 
 - name: Check if sufficient space is available
-  fail:
-    msg: "Insufficient space on device containing {{ prom_path }}. Need {{ prom_size.stdout }}, found {{ drive_size.stdout }}"
+  ansible.builtin.fail:
+    msg: Insufficient space on device containing {{ prom_path }}. Need {{ prom_size.stdout }}, found {{ drive_size.stdout }}
   when: drive_size.stdout | int < prom_size.stdout | int
 
 - name: Extract {{ prom_tarball }} to {{ prom_path }} (this may take some time!)
-  command: tar -xf {{ prom_tarball }} -C {{ prom_path }}
+  ansible.builtin.command: tar -xf {{ prom_tarball }} -C {{ prom_path }}

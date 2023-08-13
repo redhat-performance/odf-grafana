@@ -1,16 +1,16 @@
-deploy_local: yes
-grafana_namespace: 'N/A'
-grafana_service_account: 'N/A'
+---
+deploy_local: true
+grafana_namespace: N/A
+grafana_service_account: N/A
 grafana_port: 3001
 
 prometheus_image_tag: 2.39.1
 prometheus_route: http://local-prometheus:9090
-token: 'N/A'
+token: N/A
 
 container_engine_reqs:
   docker:
     - docker
     - docker-compose
-  podman: 
+  podman:
     - podman
-  

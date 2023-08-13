@@ -1,2 +1,3 @@
+---
 prometheus_datasource_name: prometheus
 infinity_datasource_name: infinity

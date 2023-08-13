@@ -2,8 +2,8 @@
 - name: Deploy Grafana
   hosts: localhost
   gather_facts: false
-  vars: 
-    deploy_local: no
+  vars:
+    deploy_local: false
   roles:
     - common
     - prepare
@@ -13,8 +13,7 @@
     - dashboard
   tasks:
     - name: Show deployment summary
-      pause:
+      ansible.builtin.pause:
         seconds: 0
         prompt: |
           {{ lookup('ansible.builtin.template', 'roles/grafana/templates/summary.j2') }}
- 
