@@ -1,24 +1,23 @@
 ---
 - name: Get dashboards
-  set_fact:
+  ansible.builtin.set_fact:
     dashboard_files: "{{ lookup('ansible.builtin.fileglob', '*.json', wantlist=True) }}"
 
 - name: Count the dashboards to upload
-  set_fact:
+  ansible.builtin.set_fact:
     dashboard_count: "{{ dashboard_files | length }}"
 
 - name: Load dashboard files
-  include_tasks: load_dashboard.yml
+  ansible.builtin.include_tasks: load_dashboard.yml
   with_items: "{{ dashboard_files }}"
   when: dashboard_path is not defined
 
 - name: Star dashboards
-  include_tasks: star_dashboards.yml
+  ansible.builtin.include_tasks: star_dashboards.yml
   when: star_dashboards
 
 - name: Load user supplied dashboard
-  include_tasks: load_dashboard.yml
+  ansible.builtin.include_tasks: load_dashboard.yml
   with_items:
     - "{{ dashboard_path }}"
-  when: dashboard_path is defined 
-
+  when: dashboard_path is defined

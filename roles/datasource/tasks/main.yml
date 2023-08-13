@@ -1,28 +1,27 @@
 ---
 - name: Grant the grafana service account the cluster-monitoring-view
-  command: "oc -n {{ grafana_namespace }} adm policy add-cluster-role-to-user cluster-monitoring-view -z {{ grafana_service_account }}"
-
+  ansible.builtin.command: oc -n {{ grafana_namespace }} adm policy add-cluster-role-to-user cluster-monitoring-view -z {{ grafana_service_account }}
 - name: Determine the grafana service account's token name
-  command: "oc -n {{ grafana_namespace }} get sa {{ grafana_service_account }} -o jsonpath='{.secrets[0].name}'"
+  ansible.builtin.command: oc -n {{ grafana_namespace }} get sa {{ grafana_service_account }} -o jsonpath='{.secrets[0].name}'
   register: secret_name
 
 - name: Fetch the token - method 1
-  shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.data.token}' | base64 -d"
+  ansible.builtin.shell: oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.data.token}' | base64 -d
   register: sa_secret_method_1
 
 - name: Fetch the token - method 2
-  shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
+  ansible.builtin.shell: oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\.io/token-secret\.value}'
   register: sa_secret_method_2
 
 - name: Set the token from Service Account secret from method 1
-  set_fact:
+  ansible.builtin.set_fact:
     token: "{{ sa_secret_method_1.stdout }}"
   when:
     - secret_name.rc == 0
     - sa_secret_method_1.stdout
 
 - name: Set the token from Service Account secret from method 2
-  set_fact:
+  ansible.builtin.set_fact:
     token: "{{ sa_secret_method_2.stdout }}"
   when:
     - secret_name.rc == 0
@@ -30,21 +29,21 @@
     - not sa_secret_method_1.stdout
 
 - name: Show token
-  debug:
+  ansible.builtin.debug:
     msg: "{{ token }}"
 
 - name: Fail if we can't determine the token
-  fail:
-    msg: "Unable to get the token from the {{ grafana_service_account }} Service Account"
+  ansible.builtin.fail:
+    msg: Unable to get the token from the {{ grafana_service_account }} Service Account
   when:
     - secret_name.rc > 0
 
 - name: Add Prometheus datasource to Grafana
-  command:
+  ansible.builtin.command:
     cmd: oc apply -f -
     stdin: "{{ lookup('template', 'prometheus_datasource.j2') }}"
 
 - name: Add Infinity datasource to Grafana
-  command:
+  ansible.builtin.command:
     cmd: oc apply -f -
     stdin: "{{ lookup('template', 'infinity_datasource.j2') }}"

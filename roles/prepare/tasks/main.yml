@@ -1,32 +1,29 @@
 ---
-
 - name: Generate a random password for Grafana
-  command: pwgen {{ password_length }} -1
+  ansible.builtin.command: pwgen {{ password_length }} -1
   register: pwgen_out
   when: grafana_password is not defined
 
 - name: Set the Grafana password
-  set_fact:
+  ansible.builtin.set_fact:
     grafana_password: "{{ pwgen_out.stdout }}"
   when: grafana_password is not defined
 
 - name: Fail if the length of grafana_password is too short
-  fail:
-    msg: "Your grafana_password ({{ grafana_password }}) is too short. It must be at least {{ password_length }} chars in size"
-  when: grafana_password | length < 16
+  ansible.builtin.fail:
+    msg: Your grafana_password ({{ grafana_password }}) is too short. It must be at least {{ password_length }} chars in size
+  when: grafana_password | length < password_length
 
 - name: Fetch a list of namespaces
-  command: oc get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+  ansible.builtin.command: oc get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
   register: namespaces
   when: not deploy_local
 
 - name: Fail if the namespace '{{ grafana_namespace }}' already exists
-  fail:
-    msg: "Your chosen namespace {{ grafana_namespace }} is already defined"
+  ansible.builtin.fail:
+    msg: Your chosen namespace {{ grafana_namespace }} is already defined
   when: not deploy_local and grafana_namespace in namespaces.stdout_lines
 
 - name: Extract tarball for local deployment
-  include_tasks: extract_tarball.yml
+  ansible.builtin.include_tasks: extract_tarball.yml
   when: deploy_local
-
-  

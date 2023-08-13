@@ -1,8 +1,7 @@
 ---
-
 # can't use ansible.builtin.package_facts due to oc being potentially installed via tarball
 - name: Check required packages are installed
-  command: "which {{ item }} "
+  ansible.builtin.command: "which {{ item }} "
   register: result
   changed_when: result.rc > 0
   failed_when: result.rc > 0
@@ -10,7 +9,7 @@
   when: not deploy_local
 
 - name: Check required packages are installed
-  command: "which {{ item }} "
+  ansible.builtin.command: "which {{ item }} "
   register: result
   changed_when: result.rc > 0
   failed_when: result.rc > 0
@@ -18,17 +17,17 @@
   when: deploy_local
 
 - name: Check logged in state
-  command: oc status
-  ignore_errors: yes
+  ansible.builtin.command: oc status
+  ignore_errors: true
   register: oc_status
   when: not deploy_local
 
-- name: fail if not logged in
-  fail:
+- name: Fail if not logged in
+  ansible.builtin.fail:
     msg: Not logged in! You need to be logged in to run the playbook
   when: not deploy_local and oc_status.rc > 0
 
 - name: Fail of the grafana_namespace variable is not set
-  fail:
+  ansible.builtin.fail:
     msg: You must set grafana_namespace in either all.yml or use -e grafana_namespace=<wah> at execution time
   when: not deploy_local and grafana_namespace is not defined

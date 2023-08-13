@@ -1,9 +1,9 @@
+---
 # default settings
 dependencies:
   - pwgen
-  - oc 
-  - sed 
+  - oc
+  - sed
   - jq
 
 password_length: 16
-

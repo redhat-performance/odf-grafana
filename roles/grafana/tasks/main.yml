@@ -1,6 +1,6 @@
 ---
 - name: Wait for up to 10m for the Grafana operator to be available
-  command:
+  ansible.builtin.command:
     cmd: oc -n {{ grafana_namespace }} get pod --selector=control-plane=controller-manager -o jsonpath='{.items[0].status.phase}'
   register: pod_state
   until: pod_state.stdout == "Running"
@@ -9,13 +9,13 @@
   when: not deploy_local
 
 - name: Deploying Grafana
-  command:
-    cmd: oc apply -f - 
+  ansible.builtin.command:
+    cmd: oc apply -f -
     stdin: "{{ lookup('template', 'grafana.j2') }}"
   when: not deploy_local
 
 - name: Wait up to 10m for the external route to appear
-  command:
+  ansible.builtin.command:
     cmd: oc -n {{ grafana_namespace }} get route/grafana-route -o json
   register: route
   retries: 120
@@ -24,13 +24,13 @@
   when: not deploy_local
 
 - name: Parse the route output
-  set_fact:
+  ansible.builtin.set_fact:
     route_json: "{{ route.stdout|from_json}}"
   when: not deploy_local and route.rc == 0
 
 - name: Set the Grafana route URL
-  set_fact:
-    grafana_route: "https://{{ route_json.spec.host }}"
+  ansible.builtin.set_fact:
+    grafana_route: https://{{ route_json.spec.host }}
   when: not deploy_local and route.rc == 0
 
 - name: Wait for up to 10m for Grafana to be accessible
@@ -39,8 +39,8 @@
     user: "{{ grafana_user }}"
     password: "{{ grafana_password }}"
     method: GET
-    validate_certs: no
-    force_basic_auth: yes
+    validate_certs: false
+    force_basic_auth: true
   register: grafana_health
   retries: 120
   delay: 5
@@ -50,8 +50,8 @@
   ansible.builtin.uri:
     url: "{{ grafana_route }}/api/datasources"
     method: POST
-    validate_certs: no
-    force_basic_auth: yes
+    validate_certs: false
+    force_basic_auth: true
     user: "{{ grafana_user }}"
     password: "{{ grafana_password }}"
     body_format: json
@@ -69,5 +69,4 @@
   ansible.builtin.template:
     src: ../templates/credentials.j2
     dest: ~/odf-grafana-credentials
-    mode: '0600'
- 
+    mode: "0600"
