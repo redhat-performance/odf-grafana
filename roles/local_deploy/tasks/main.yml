@@ -22,7 +22,7 @@
   when: container_engine == "docker"
 
 - name: Deploy containers via podman - Prometheus
-  shell: podman run -d --pod new:perfscale -p 9100:9090 -p {{ grafana_port }}:3000 --user {{ uid.stdout }}:{{ uid.stdout }} --userns=keep-id -v {{ prom_path }}:/prometheus --name local-prometheus docker.io/prom/prometheus:v{{ prometheus_image_tag }}
+  shell: podman run -d --pod new:perfscale -p 9100:9090 -p {{ grafana_port }}:3000 --user {{ uid.stdout }}:{{ uid.stdout }} --userns=keep-id -v {{ prom_path }}:/prometheus:z --name local-prometheus docker.io/prom/prometheus:v{{ prometheus_image_tag }}
   when: container_engine == "podman"
 
 - name: Deploy containers via podman - Grafana
