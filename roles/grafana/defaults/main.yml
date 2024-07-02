@@ -1,5 +1,6 @@
 grafana_user: grafana
-grafana_image_tag: 9.1.7
+#grafana_image_tag: 9.1.7
+grafana_image_tag: 11.1.0
 grafana_cpu_requests: 500m
 grafana_mem_requests: 1Gi
 

@@ -29,6 +29,15 @@
     - sa_secret_method_2.stdout
     - not sa_secret_method_1.stdout
 
+    #- name: create token for OCP4.16
+    #  shell: "oc -n {{ grafana_namespace }} create token {{ grafana_service_account }}"
+    #  register: new_token
+    #  set_fact:
+    #    token: "{{ new_token.stdout }}"
+    #  when:
+    #    - secret_name.rc == 0
+    #    - new_token.stdout
+
 - name: Show token
   debug:
     msg: "{{ token }}"

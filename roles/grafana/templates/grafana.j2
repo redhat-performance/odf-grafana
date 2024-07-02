@@ -7,34 +7,37 @@ metadata:
 data:
   GF_INSTALL_PLUGINS: yesoreyeram-infinity-datasource
 ---
-apiVersion: integreatly.org/v1alpha1
+apiVersion: grafana.integreatly.org/v1beta1
 kind: Grafana
 metadata:
   name: grafana
   namespace: {{ grafana_namespace }}
+  labels:
+    dashboards: "grafana-dashboard"
 spec:
-  baseImage: docker.io/grafana/grafana:{{ grafana_image_tag }}
+  version: {{ grafana_image_tag }}
   deployment:
     envFrom:
       - configMapRef:
           name: grafana-plugins
   client:
-    preferService: true
-  ingress:
-    enabled: True
-    pathType: Prefix
-    path: "/"
+    preferIngress: true
+  route:
+    spec:
+      enabled: "True"
+      pathType: Prefix
+      path: "/"
   config:
     log:
       mode: "console"
       level: "error"
     log.frontend:
-      enabled: true
+      enabled: "true"
     auth:
-      disable_login_form: False
-      disable_signout_menu: True
+      disable_login_form: "False"
+      disable_signout_menu: "True"
     auth.anonymous:
-      enabled: False
+      enabled: "False"
     security:
       admin_user: {{ grafana_user }}
       admin_password: {{ grafana_password }}

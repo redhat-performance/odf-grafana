@@ -1,16 +1,19 @@
 ---
-apiVersion: integreatly.org/v1alpha1
-kind: GrafanaDataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
 metadata:
   name: infinity
   namespace: {{ grafana_namespace }}
 spec:
   name: {{ infinity_datasource_name}}.yml
-  datasources:
-    - name: {{ infinity_datasource_name }}
-      type: yesoreyeram-infinity-datasource
-      isDefault: false
-      version: 1
-      editable: true
-      jsonData:
-        tlsSkipVerify: true
+  datasource:
+    name: {{ infinity_datasource_name }}
+    type: yesoreyeram-infinity-datasource
+    isDefault: false
+    version: 1
+    editable: true
+    jsonData:
+      tlsSkipVerify: true
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana-dashboard"
