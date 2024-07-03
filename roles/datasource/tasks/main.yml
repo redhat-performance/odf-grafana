@@ -14,8 +14,8 @@
   shell: "oc -n {{ grafana_namespace }} get secret {{ secret_name.stdout }} -o jsonpath='{.metadata.annotations.openshift\\.io/token-secret\\.value}'"
   register: sa_secret_method_2
 
-- name: create token for OCP4.16
-  shell: "oc -n {{ grafana_namespace }} create token {{ grafana_service_account }}"
+- name: create token for OCP4.16 for 60 days - method 3
+  shell: "oc -n {{ grafana_namespace }} create token {{ grafana_service_account }} --duration=$((60*24))h"
   register: sa_token
 
 - name: Set the token from Service Account secret from method 1
