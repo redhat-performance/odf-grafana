@@ -1,2 +1,2 @@
-grafana_operator_channel: v4
-grafana_csv: grafana-operator.v4.5.1
+grafana_operator_channel: v5
+grafana_csv: grafana-operator.v5.9.2
