@@ -28,6 +28,10 @@
     route_json: "{{ route.stdout|from_json}}"
   when: not deploy_local and route.rc == 0
 
+- name: Annotate the Grafana route to set timeout
+  command:
+    cmd: oc -n {{ grafana_namespace }} annotate route/grafana-route --overwrite haproxy.router.openshift.io/timeout={{ grafana_route_timeout }}s
+
 - name: Set the Grafana route URL
   set_fact:
     grafana_route: "https://{{ route_json.spec.host }}"

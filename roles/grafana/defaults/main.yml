@@ -3,4 +3,8 @@ grafana_user: grafana
 grafana_image_tag: 11.1.0
 grafana_cpu_requests: 500m
 grafana_mem_requests: 1Gi
-
+grafana_mem_limits: 8Gi
+grafana_route_timeout: "300"
+dataproxy_timeout: "300"
+dataproxy_keep_alive_seconds: "300"
+datasource_http_timeout: "300"

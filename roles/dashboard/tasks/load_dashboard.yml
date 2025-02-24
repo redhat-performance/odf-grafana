@@ -8,7 +8,7 @@
 # dealing with a dict.
 - name: Load dashboard definition
   set_fact: 
-    dashboard_content: "'{{ lookup('file', item) }}'"
+    dashboard_content: "'{{ lookup('file', item) | replace('${datasource}', hostvars['localhost']['prometheus_datasource_uid'])}}'"
   when: not deploy_local
 
 - name: Define dashboard to Grafana
