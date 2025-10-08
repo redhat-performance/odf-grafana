@@ -20,6 +20,17 @@ spec:
     envFrom:
       - configMapRef:
           name: grafana-plugins
+    spec:
+      template:
+        spec:
+          containers:
+            - name: grafana
+              resources:
+                limits:
+                  memory: {{ grafana_mem_limits }}
+                requests:
+                  cpu: {{ grafana_cpu_requests }}
+                  memory: {{ grafana_mem_requests }}
   client:
     preferIngress: false
   route:
@@ -41,6 +52,9 @@ spec:
     security:
       admin_user: {{ grafana_user }}
       admin_password: {{ grafana_password }}
+    dataproxy:
+      timeout: "'{{ dataproxy_timeout }}'"
+      keep_alive_seconds: "'{{ dataproxy_keep_alive_seconds }}'"
   service:
     name: "grafana-service"
     labels:
@@ -49,8 +63,3 @@ spec:
   dashboardLabelSelector:
     - matchExpressions:
         - { key: app, operator: In, values: [grafana] }
-  resources:
-    # Optionally specify container resources
-    requests:
-      cpu: {{ grafana_cpu_requests }}
-      memory: {{ grafana_mem_requests }}

@@ -4,6 +4,7 @@ kind: GrafanaDatasource
 metadata:
   name: prometheus
   namespace: {{ grafana_namespace }}
+  annotations:
 spec:
   name: {{ prometheus_datasource_name }}.yml
   datasource:
@@ -18,6 +19,7 @@ spec:
       tlsSkipVerify: true
       timeInterval: "10s"
       httpHeaderName1: 'Authorization'
+      timeout: '{{ datasource_http_timeout }}'
     secureJsonData:
       httpHeaderValue1: 'Bearer {{ token }}'
   instanceSelector:

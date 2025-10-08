@@ -56,6 +56,16 @@
     cmd: oc apply -f -
     stdin: "{{ lookup('template', 'prometheus_datasource.j2') }}"
 
+
+- name: Get Prometheus DataSource UID
+  command:
+    cmd: oc get -n {{ grafana_namespace }} grafanadatasource prometheus -ojsonpath="{.metadata.uid}"
+  register: prometheus_datasource
+
+- name: Set Prometheus DataSource UID as fact
+  set_fact:
+    prometheus_datasource_uid: "{{ prometheus_datasource.stdout }}"
+
 - name: Add Infinity datasource to Grafana
   command:
     cmd: oc apply -f -
