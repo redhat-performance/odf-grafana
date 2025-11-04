@@ -11,6 +11,11 @@
     dashboard_content: "'{{ lookup('file', item) }}'"
   when: not deploy_local
 
+- name: Load dashboard definition for local deploy
+  set_fact:
+    dashboard_content: "{{ lookup('file', item) | replace('${datasource}', hostvars['localhost']['prometheus_datasource_uid']) | from_json | combine({'id': none})}}"
+  when: deploy_local
+
 - name: Define dashboard to Grafana
   command:
     cmd: oc -n {{ grafana_namespace }} apply -f - 
@@ -28,8 +33,7 @@
     body_format: json
     body: >
       {
-        "dashboard": {{ lookup('file', item) }},
-        "folderId": 0,
-        "overwrite": true
+        "dashboard": {{ dashboard_content | to_json }},
+        "folderId": 0
       } 
   when: deploy_local

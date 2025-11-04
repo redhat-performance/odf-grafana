@@ -63,6 +63,12 @@
         "access": "proxy",
         "basicAuth": false
       }
+  register: datasource_created
+  when: deploy_local
+
+- name: Set Prometheus DataSource UID as fact
+  set_fact:
+    prometheus_datasource_uid: "{{ datasource_created['json']['datasource']['uid'] }}"
   when: deploy_local
 
 - name: Record the grafana login credentials, locally
