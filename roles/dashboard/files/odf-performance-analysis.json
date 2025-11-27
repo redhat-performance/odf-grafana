@@ -5394,7 +5394,7 @@
                 "uid": "${datasource}"
               },
               "exemplar": true,
-              "expr": "label_replace(rate(container_cpu_usage_seconds_total{image!=\"\",container=~\"(noobaa|core|db|endpoint).*\", namespace=\"openshift-storage\"}[1m]),\"daemon\", \"$1\", \"pod\", \"noobaa-(.*)\")\n",
+              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"\", namespace=\"openshift-storage\", pod=~\"noobaa-.*|.*-noobaa-pod-.*\"}) by (pod)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{daemon}}",
@@ -5488,7 +5488,7 @@
                 "uid": "${datasource}"
               },
               "exemplar": true,
-              "expr": "label_replace(container_memory_rss{container=~\"(noobaa|core|db|endpoint).*\", namespace=\"openshift-storage\"},\"daemon\", \"$1\", \"pod\", \"noobaa-(.*)\")",
+              "expr": "sum(container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"\", namespace=\"openshift-storage\",  pod=~\"noobaa-.*|.*-noobaa-pod-.*\", container!=\"\", image!=\"\"}) by (pod)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{daemon}}",
@@ -5500,6 +5500,418 @@
         }
       ],
       "title": "Noobaa CPU / Memory Analysis",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 175,
+      "panels": [
+        {
+          "type": "timeseries",
+          "title": "Warp POD CPU Usage",
+          "gridPos": {
+            "x": 0,
+            "y": 1,
+            "w": 12,
+            "h": 8
+          },
+          "datasource": {
+            "uid": "${datasource}",
+            "type": "prometheus"
+          },
+          "id": 262,
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"\", namespace=\"default\"}) by (pod)",
+              "range": true,
+              "instant": false,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "77f23acc-f8f7-4c7d-958e-ba4f25b5ef1e"
+              },
+              "editorMode": "code",
+              "legendFormat": "__auto"
+            }
+          ],
+          "options": {
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "legend": {
+              "showLegend": true,
+              "displayMode": "list",
+              "placement": "bottom",
+              "calcs": []
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "drawStyle": "line",
+                "lineInterpolation": "linear",
+                "barAlignment": 0,
+                "lineWidth": 1,
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "spanNulls": false,
+                "insertNulls": false,
+                "showPoints": "auto",
+                "pointSize": 5,
+                "stacking": {
+                  "mode": "none",
+                  "group": "A"
+                },
+                "axisPlacement": "auto",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "axisBorderShow": false,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "axisCenteredZero": false,
+                "hideFrom": {
+                  "tooltip": false,
+                  "viz": false,
+                  "legend": false
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "value": null,
+                    "color": "green"
+                  },
+                  {
+                    "value": 80,
+                    "color": "red"
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "type": "timeseries",
+          "title": "Warp POD Memory Usage",
+          "gridPos": {
+            "x": 12,
+            "y": 1,
+            "w": 12,
+            "h": 8
+          },
+          "datasource": {
+            "uid": "${datasource}",
+            "type": "prometheus"
+          },
+          "id": 263,
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"\", namespace=\"default\", container!=\"\", image!=\"\"}) by (pod)",
+              "range": true,
+              "instant": false,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "77f23acc-f8f7-4c7d-958e-ba4f25b5ef1e"
+              },
+              "editorMode": "code",
+              "legendFormat": "__auto"
+            }
+          ],
+          "options": {
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "legend": {
+              "showLegend": true,
+              "displayMode": "list",
+              "placement": "bottom",
+              "calcs": []
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "drawStyle": "line",
+                "lineInterpolation": "linear",
+                "barAlignment": 0,
+                "lineWidth": 1,
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "spanNulls": false,
+                "insertNulls": false,
+                "showPoints": "auto",
+                "pointSize": 5,
+                "stacking": {
+                  "mode": "none",
+                  "group": "A"
+                },
+                "axisPlacement": "auto",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "axisBorderShow": false,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "axisCenteredZero": false,
+                "hideFrom": {
+                  "tooltip": false,
+                  "viz": false,
+                  "legend": false
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "value": null,
+                    "color": "green"
+                  },
+                  {
+                    "value": 80,
+                    "color": "red"
+                  }
+                ]
+              },
+              "unit": "Bps"
+            },
+            "overrides": []
+          }
+        }
+      ],
+      "title": "Warp POD CPU/Memory Overview",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 175,
+      "panels": [
+        {
+          "datasource": {
+            "uid": "${datasource}",
+            "type": "prometheus"
+          },
+          "type": "timeseries",
+          "title": "Node CPU Usage",
+          "gridPos": {
+            "x": 0,
+            "y": 10,
+            "w": 12,
+            "h": 8
+          },
+          "id": 259,
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[1m]))",
+              "range": true,
+              "instant": false,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "77f23acc-f8f7-4c7d-958e-ba4f25b5ef1e"
+              },
+              "editorMode": "code",
+              "legendFormat": "__auto"
+            }
+          ],
+          "options": {
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "legend": {
+              "showLegend": true,
+              "displayMode": "list",
+              "placement": "bottom",
+              "calcs": []
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "drawStyle": "line",
+                "lineInterpolation": "linear",
+                "barAlignment": 0,
+                "lineWidth": 1,
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "spanNulls": false,
+                "insertNulls": false,
+                "showPoints": "auto",
+                "pointSize": 5,
+                "stacking": {
+                  "mode": "none",
+                  "group": "A"
+                },
+                "axisPlacement": "auto",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "axisBorderShow": false,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "axisCenteredZero": false,
+                "hideFrom": {
+                  "tooltip": false,
+                  "viz": false,
+                  "legend": false
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "value": null,
+                    "color": "green"
+                  },
+                  {
+                    "value": 80,
+                    "color": "red"
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "datasource": {
+            "uid": "${datasource}",
+            "type": "prometheus"
+          },
+          "type": "timeseries",
+          "title": "Node Memory Usage",
+          "gridPos": {
+            "x": 12,
+            "y": 10,
+            "w": 12,
+            "h": 8
+          },
+          "id": 260,
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "avg by (instance) (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
+              "range": true,
+              "instant": false,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "77f23acc-f8f7-4c7d-958e-ba4f25b5ef1e"
+              },
+              "editorMode": "code",
+              "legendFormat": "__auto"
+            }
+          ],
+          "options": {
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "legend": {
+              "showLegend": true,
+              "displayMode": "list",
+              "placement": "bottom",
+              "calcs": []
+            }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "drawStyle": "line",
+                "lineInterpolation": "linear",
+                "barAlignment": 0,
+                "lineWidth": 1,
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "spanNulls": false,
+                "insertNulls": false,
+                "showPoints": "auto",
+                "pointSize": 5,
+                "stacking": {
+                  "mode": "none",
+                  "group": "A"
+                },
+                "axisPlacement": "auto",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "axisBorderShow": false,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "axisCenteredZero": false,
+                "hideFrom": {
+                  "tooltip": false,
+                  "viz": false,
+                  "legend": false
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "value": null,
+                    "color": "green"
+                  },
+                  {
+                    "value": 80,
+                    "color": "red"
+                  }
+                ]
+              },
+              "unit": "Bps"
+            },
+            "overrides": []
+          }
+        }
+      ],
+      "title": "Node CPU/Memory Overview",
       "type": "row"
     },
     {
